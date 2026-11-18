@@ -1,0 +1,153 @@
+{
+ "format": 2,
+ "group": "colorgraphs",
+ "reference": {
+  "package": "defog",
+  "revision": "63f6d10",
+  "what": "the research package at the revision the paper's colored-graph runs used"
+ },
+ "environment": {
+  "python": "3.10.15",
+  "torch": "2.5.0+cu124",
+  "numpy": "1.26.4",
+  "threads": 1,
+  "machine": "x86_64",
+  "system": "Linux"
+ },
+ "inputs": {
+  "base.ckpt": "6a45d855607bc7cdd68251781eadd8d0788f9e938c4ff4cba1f225b99dcb396d",
+  "property_adapter.ckpt": "5e852fee612242b9498d457a20f7b290ddbc010be61f8a071d349a5f9188ee5c",
+  "concept_adapter.ckpt": "847d65d623b17bc61f4271b9388373569758c54f6f279aabbcb6186e33a1a15b",
+  "native/model.ckpt": "b7367823595b5e45aba357f112ac684ff2dd2f9cf4d13e01e1ae5c01e787b81a",
+  "native/condition_stats.json": "c25289ec9da6b3bbfd70b8240399c48b1eefb9217b3498d36e04c2a678ae2081",
+  "data/concept_targets.npz": "02a557255edb1a505e50a80f8421af484d62778e93d80da253779c9ec6f719eb"
+ },
+ "settings": {
+  "eta": 0.0,
+  "omega": 0.0,
+  "time_distortion": "polydec",
+  "compose_mode": "product",
+  "blend_space": "prob",
+  "weights": {
+   "property": 2.0,
+   "concept": 1.0,
+   "joint": [
+    1.0,
+    1.0
+   ]
+  },
+  "property_level": 1.0,
+  "concept_index": 3,
+  "fk": {
+   "beta": 16.0,
+   "warmup_frac": 0.7,
+   "resample_interval": null,
+   "ess_frac": null,
+   "resample_scheme": "multinomial"
+  },
+  "native": {
+   "guidance_scale": 1.0
+  },
+  "explicit_nodes": 12
+ },
+ "tiers": {
+  "quick": {
+   "config": {
+    "steps": {
+     "base_sampling": 10,
+     "explicit_size": 10,
+     "property_adapter": 10,
+     "concept_adapter": 10,
+     "joint_product": 20,
+     "fk_joint": 20,
+     "native_conditioned": 10
+    },
+    "graphs": {
+     "base_sampling": 4,
+     "explicit_size": 4,
+     "property_adapter": 4,
+     "concept_adapter": 4,
+     "joint_product": 4,
+     "fk_joint": 8,
+     "native_conditioned": 4
+    }
+   },
+   "cases": {
+    "base_sampling": {
+     "digest": "277d81b371efd478fdf29bd2c79a7c5c7c9b2bc8084b14b422d347e6f07bab66",
+     "sizes": [
+      23,
+      27,
+      27,
+      26
+     ],
+     "pins": "unconditional sampling, node counts from the base's own distribution"
+    },
+    "explicit_size": {
+     "digest": "673ce371c736bb18c2aba7722bd7f6ab996e10b590e249bd7813633cc93f4be3",
+     "sizes": [
+      12,
+      12,
+      12,
+      12
+     ],
+     "pins": "sampling with an explicit node count (the size-sweep path)"
+    },
+    "property_adapter": {
+     "digest": "2e31a6402a63dab5501a76eb16375caf534423346b8cfe867e292e17ed0edda1",
+     "sizes": [
+      22,
+      28,
+      38,
+      26
+     ],
+     "pins": "the property adapter alone at its paper weight"
+    },
+    "concept_adapter": {
+     "digest": "be8556d796e2195e957b84ad476bb7d9945f46055d806caec3c8a4bb807aceeb",
+     "sizes": [
+      32,
+      37,
+      23,
+      42
+     ],
+     "pins": "the concept adapter alone at its paper weight"
+    },
+    "joint_product": {
+     "digest": "1eeae4b375bb7f593f6523ed84585679aa5721a2ba9bfdc9889badf9e5e486e5",
+     "sizes": [
+      35,
+      28,
+      30,
+      29
+     ],
+     "pins": "both adapters composed as a plain sum at the selected weights (1, 1)"
+    },
+    "fk_joint": {
+     "digest": "9aa2acefaa9398845215104dd0b24477a373fa0429cafbb8d1772244c2c1eea2",
+     "sizes": [
+      23,
+      23,
+      23,
+      23,
+      23,
+      23,
+      23,
+      23
+     ],
+     "pins": "Feynman-Kac steering of the composition, multinomial resampling, deterministic stand-in energy"
+    },
+    "native_conditioned": {
+     "digest": "2921dcbb1dd6b01c35b544ecff0b26ff30751ac9692196330a93e3e1f40697f1",
+     "sizes": [
+      28,
+      28,
+      40,
+      36
+     ],
+     "pins": "the end-to-end conditioned model with its standardized condition, guidance 1"
+    }
+   }
+  }
+ }
+}

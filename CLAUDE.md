@@ -18,7 +18,8 @@ repository and is kept outside it; `docs/` carries what a contributor needs.
 
 - `src/defog_megan/zoo/` the model-zoo manifest (`manifest.json`) and its loader and verifier
 - `docs/` architecture (the plan), zoo (contents, contracts, licences), parity (how a port is accepted)
-- `tests/` CPU-only unit tests; `tests/parity/` (not yet there) opt-in comparison against golden outputs
+- `tests/` CPU-only unit tests; `tests/parity/` the golden outputs of the research stack (colored graphs, generator
+  side), the generator that makes them, and the opt-in gate that a port must pass (`tests/parity/README.md`)
 
 ## Commands
 
@@ -30,7 +31,8 @@ uv pip install torch --index-url https://download.pytorch.org/whl/cpu
 uv pip install -e "<path to defog-adapt>[chem]"
 uv pip install -e . --no-deps && uv pip install pytest pytest-xdist
 OMP_NUM_THREADS=2 .venv/bin/python -m pytest -n 8 -q            # unit tests, no network, a few seconds
-DEFOG_MEGAN_ZOO=/path/to/zoo .venv/bin/python -m pytest -m parity   # parity gate (local only; not there yet)
+# parity gate: opt-in, in the research environment (same torch build as the golden file), see tests/parity/README.md
+DEFOG_MEGAN_ZOO=/path/to/zoo PYTHONPATH=<defog-adapt>/src:src <research python> -m pytest -m parity
 ```
 
 ## Rules
