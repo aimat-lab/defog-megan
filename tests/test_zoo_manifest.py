@@ -72,9 +72,10 @@ def test_the_synthetic_group_ships_its_dataset_and_reference_memberships(manifes
     assert {"data/pool.npz", "data/concept_conditions.npz"} <= paths
 
 
-def test_the_files_that_are_not_in_hand_are_known_and_few(manifest):
-    missing = {(f.group, f.id) for f in manifest.files() if not f.in_hand}
-    assert missing == {("colorgraphs", "C3"), ("ames", "A2")}
+def test_every_file_of_the_manifest_is_in_the_maintainers_collection(manifest):
+    """The two files that were once only on the cluster (the FiLM-only property adapter and the Ames class adapter) have
+    been fetched and checked against their recorded sizes and hashes."""
+    assert [(f.group, f.id) for f in manifest.files() if not f.in_hand] == []
 
 
 def test_the_manifest_holds_no_machine_path_account_or_job_number():

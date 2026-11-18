@@ -35,7 +35,7 @@
      "ship": "optional",
      "bytes": 9840881,
      "sha256": "9d35abfa0e3ce96d2059ec8a64ae8bb43b7f14d9deb0ed941323b906257d2a0f",
-     "in_hand": false,
+     "in_hand": true,
      "note": "Property adapter with FiLM only (the control arm of the adapter-architecture comparison)."
     },
     {
@@ -363,7 +363,7 @@
      "ship": "core",
      "bytes": 26618896,
      "sha256": "14476d998493ad04ef30e2ddd6a920ce23127206aa467d273d418eec5d3df95d",
-     "in_hand": false,
+     "in_hand": true,
      "note": "Class adapter on the measured 0/1 label (cross-attention and Fourier bands); used at weight 1.5."
     },
     {

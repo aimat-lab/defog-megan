@@ -23,9 +23,10 @@ About 563 MB of core files in total. Each group contains:
   reference table of memberships.
 
 `ship` levels: `core` is needed to use the models, `optional` is useful but not needed, `withheld` is not redistributed.
-Two paper files (the FiLM-only property adapter of the colored graphs and the class adapter of the Ames group) are
-marked `in_hand: false`: they are part of the paper but not yet in the maintainer's local collection, so the manifest
-carries an earlier record of their size and hash and they cannot be verified here.
+Every file is in the maintainer's collection. `in_hand: false` marks a file that is part of a group but not yet
+collected; its size and hash then come from an earlier record and it cannot be verified from here. (Two files, the
+FiLM-only property adapter of the colored graphs and the class adapter of the Ames group, were such cases until they were
+fetched and matched their recorded hashes.)
 
 ## Checking a copy
 
