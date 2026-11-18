@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.venv/
+.venv*/
+venv/
+
+# Local working area (scratch output, logs); never committed
+.work/
+
+# Never commit weights, datasets or experiment output. Checkpoints are not distributed with the
+# package; the model zoo is downloaded to a cache, the parity tests read it from $DEFOG_MEGAN_ZOO.
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+/data/
+/ckpts/
+results/
+.DS_Store

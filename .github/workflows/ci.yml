@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  OMP_NUM_THREADS: "2"
+  MKL_NUM_THREADS: "2"
+  MPLBACKEND: Agg
+
+jobs:
+  test:
+    name: tests (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      # Until defog-adapt is on PyPI its repository is the source, and this package is installed without
+      # dependencies (its own pin `defog-adapt>=0.1.0` would not accept the development version).
+      # Replace these three lines by `pip install -e ".[chem,dev]"` once a release exists.
+      - name: Install (CPU PyTorch first, so the resolver does not pull a CUDA build)
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install "defog-adapt[chem] @ git+https://github.com/aimat-lab/defog-adapt@main"
+          pip install -e . --no-deps
+          pip install pytest pytest-xdist
+      - name: Unit tests
+        run: pytest -n auto -q
+
+  build:
+    name: build the wheel and sdist, install the wheel, import it
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build and check
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+          twine check dist/*
+      - name: The wheel carries the manifest and imports without the generator installed
+        run: |
+          python -m venv /tmp/clean && /tmp/clean/bin/pip install --no-deps dist/*.whl
+          cd /tmp && /tmp/clean/bin/python -c "from defog_megan.zoo import Manifest; m = Manifest.load(); print(m.groups)"

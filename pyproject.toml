@@ -1,0 +1,81 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "defog-megan"
+# Development version. The first release is 1.0.0; it is set when the release gate passes.
+version = "1.0.0.dev0"
+description = "Concept-conditioned graph generation: property and concept adapters for DeFoG, Feynman-Kac steering, evaluation and a model zoo."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE"]
+authors = [
+    { name = "Jonas Teufel", email = "jonseb1998@gmail.com" },
+]
+requires-python = ">=3.10"
+keywords = [
+    "graph generation", "discrete flow matching", "conditional generation", "explainable AI",
+    "concept explanations", "adapters", "molecular generation", "pytorch",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Chemistry",
+]
+
+# The generator side (models, adapters, composition, Feynman-Kac steering, inpainting) is defog-adapt. Until a release
+# of it is on PyPI, install it from its repository first and this package with --no-deps (see CLAUDE.md).
+dependencies = [
+    "defog-adapt>=0.1.0",
+    "numpy>=1.23",
+]
+
+[project.optional-dependencies]
+# Molecules: RDKit through defog-adapt's own extra.
+chem = ["defog-adapt[chem]>=0.1.0"]
+# The explainer side: the self-explaining GNN, the concept extraction and the dataset/processing format. Needed for
+# Feynman-Kac steering (the GNN is the energy), for grading and for building membership tables of new data; not for
+# training adapters or for sampling without steering. The pins of these releases may restrict torch and numpy.
+megan = [
+    "graph_attention_student>=1.6.0",
+    "megan_global_explanations>=0.6.0",
+    "visual_graph_datasets>=0.17.0",
+]
+dev = ["pytest>=7", "pytest-xdist", "build", "twine"]
+all = ["defog-megan[chem,megan,dev]"]
+
+[project.urls]
+Homepage = "https://github.com/aimat-lab/defog-megan"
+Repository = "https://github.com/aimat-lab/defog-megan"
+Generator = "https://github.com/aimat-lab/defog-adapt"
+Upstream = "https://github.com/qym7/DeFoG"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/defog_megan"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/docs",
+    "/README.md",
+    "/CLAUDE.md",
+    "/CHANGELOG.md",
+    "/CITATION.cff",
+    "/LICENSE",
+    "/NOTICE",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not parity'"
+markers = [
+    "parity: opt-in; needs the model zoo (DEFOG_MEGAN_ZOO) and the golden outputs of the research stack",
+]

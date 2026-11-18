@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use defog-megan, please cite it, and cite the DeFoG paper it builds on."
+title: "defog-megan"
+type: software
+authors:
+  - family-names: Teufel
+    given-names: Jonas
+license: MIT
+repository-code: "https://github.com/aimat-lab/defog-megan"
+version: "1.0.0.dev0"
+references:
+  - type: conference-paper
+    title: "DeFoG: Discrete Flow Matching for Graph Generation"
+    authors:
+      - family-names: Qin
+        given-names: Yiming
+      - family-names: Madeira
+        given-names: Manuel
+      - family-names: Thanou
+        given-names: Dorina
+      - family-names: Frossard
+        given-names: Pascal
+    collection-title: "International Conference on Machine Learning (ICML), PMLR 267"
+    year: 2025
+    url: "https://arxiv.org/abs/2410.04263"

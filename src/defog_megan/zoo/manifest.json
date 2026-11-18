@@ -1,0 +1,542 @@
+{
+ "schema_version": 1,
+ "generated": "2026-11-18",
+ "groups": {
+  "colorgraphs": {
+   "title": "Synthetic colored graphs",
+   "requires": [
+    "megan"
+   ],
+   "files": [
+    {
+     "id": "C1",
+     "path": "base.ckpt",
+     "kind": "base",
+     "ship": "core",
+     "bytes": 34338408,
+     "sha256": "6a45d855607bc7cdd68251781eadd8d0788f9e938c4ff4cba1f225b99dcb396d",
+     "in_hand": true,
+     "note": "Unconditional DeFoG base; EMA snapshot at epoch 80 of 150, selected on validity."
+    },
+    {
+     "id": "C2",
+     "path": "property_adapter.ckpt",
+     "kind": "adapter",
+     "ship": "core",
+     "bytes": 24635536,
+     "sha256": "5e852fee612242b9498d457a20f7b290ddbc010be61f8a071d349a5f9188ee5c",
+     "in_hand": true,
+     "note": "Property adapter (cross-attention and Fourier bands) for the exact scalar motif-sum property."
+    },
+    {
+     "id": "C3",
+     "path": "property_adapter_film_only.ckpt",
+     "kind": "adapter",
+     "ship": "optional",
+     "bytes": 9840881,
+     "sha256": "9d35abfa0e3ce96d2059ec8a64ae8bb43b7f14d9deb0ed941323b906257d2a0f",
+     "in_hand": false,
+     "note": "Property adapter with FiLM only (the control arm of the adapter-architecture comparison)."
+    },
+    {
+     "id": "C4",
+     "path": "concept_adapter.ckpt",
+     "kind": "adapter",
+     "ship": "core",
+     "bytes": 24647819,
+     "sha256": "847d65d623b17bc61f4271b9388373569758c54f6f279aabbcb6186e33a1a15b",
+     "in_hand": true,
+     "note": "Concept adapter on the 19-dimensional membership vector (cross-attention)."
+    },
+    {
+     "id": "C5",
+     "path": "megan/model.ckpt",
+     "kind": "megan_model",
+     "ship": "core",
+     "bytes": 50260770,
+     "sha256": "34528b768ed4546cf48a9f6b49e2b9d5ee77359daeb211568cfc302754969276",
+     "in_hand": true,
+     "note": "Self-explaining GNN (regression, two explanation channels)."
+    },
+    {
+     "id": "C15",
+     "path": "megan/report.json",
+     "kind": "report",
+     "ship": "core",
+     "bytes": 2335,
+     "sha256": "8b8ea2235993fdf2f14430ea80cc00b014fd8001fd1034c5830b13c70b3243a9",
+     "in_hand": true,
+     "note": "Quality report of the GNN on held-out graphs."
+    },
+    {
+     "id": "C6",
+     "path": "megan/clustering.clu",
+     "kind": "clustering",
+     "ship": "core",
+     "bytes": 75517105,
+     "sha256": "aa3c31251f39693b70e3ae6ff41bbabaff44c40a6897916a6339cd9a1775966b",
+     "in_hand": true,
+     "note": "Concept clustering, 19 concepts (channel 0: 9, channel 1: 10)."
+    },
+    {
+     "id": "C7",
+     "path": "megan/process.py",
+     "kind": "processing_module",
+     "ship": "core",
+     "bytes": 22453,
+     "sha256": "926a1ccc44720f5957c3c2381081bc62cd219c401f1937232ecdede110a42bb0",
+     "in_hand": true,
+     "note": "Executable featurizer the GNN was trained with; it must travel with the model."
+    },
+    {
+     "id": "C8",
+     "path": "native/model.ckpt",
+     "kind": "base",
+     "ship": "core",
+     "bytes": 34477051,
+     "sha256": "b7367823595b5e45aba357f112ac684ff2dd2f9cf4d13e01e1ae5c01e787b81a",
+     "in_hand": true,
+     "note": "End-to-end conditioned DeFoG (property and memberships as native condition), final EMA weights."
+    },
+    {
+     "id": "C10",
+     "path": "native/condition_stats.json",
+     "kind": "condition_stats",
+     "ship": "core",
+     "bytes": 1565,
+     "sha256": "c25289ec9da6b3bbfd70b8240399c48b1eefb9217b3498d36e04c2a678ae2081",
+     "in_hand": true,
+     "note": "Normalisation of the native condition: [z(property), z(membership) in concept order]."
+    },
+    {
+     "id": "C9",
+     "path": "native/model_epoch100.ckpt",
+     "kind": "base",
+     "ship": "optional",
+     "bytes": 34518335,
+     "sha256": "a95ce958b135f9167b0a0aaa40b8660dad64465b4f916886ab5e16af4677de54",
+     "in_hand": true,
+     "note": "Same run, EMA snapshot after 100 of 150 epochs (training-length check only)."
+    },
+    {
+     "id": "C11",
+     "path": "data/pool.npz",
+     "kind": "dataset",
+     "ship": "core",
+     "bytes": 9612251,
+     "sha256": "da2ece95320569ec9cb1b53680b5c18e5a1f12c333234d9f1edf5fa0d1dde723",
+     "in_hand": true,
+     "note": "The 99,995 synthetic colored graphs with targets, motif counts and palette (the dataset of record)."
+    },
+    {
+     "id": "C12",
+     "path": "data/concept_conditions.npz",
+     "kind": "concept_conditions",
+     "ship": "core",
+     "bytes": 1417213,
+     "sha256": "af7b158ffa9988a6475aac85eece81ae77664c5baedc8c86a7326b9d4b378565",
+     "in_hand": true,
+     "note": "Membership vectors of all pool graphs (99,995 x 19); the reference for membership parity."
+    },
+    {
+     "id": "C13",
+     "path": "data/concept_targets.npz",
+     "kind": "concept_targets",
+     "ship": "core",
+     "bytes": 1343,
+     "sha256": "02a557255edb1a505e50a80f8421af484d62778e93d80da253779c9ec6f719eb",
+     "in_hand": true,
+     "note": "Request vectors, one per concept (19 x 19)."
+    },
+    {
+     "id": "C14",
+     "path": "data/concept_table.json",
+     "kind": "concept_table",
+     "ship": "core",
+     "bytes": 4962,
+     "sha256": "adb8e0835b8dbb33a925b40f733e5c55d1e25c56d7c21a4c3838b0d1ec3b6bcf",
+     "in_hand": true,
+     "note": "Concept list and the scoring settings the memberships were computed with."
+    }
+   ]
+  },
+  "zinc-logp": {
+   "title": "Molecules, Crippen logP",
+   "requires": [
+    "chem",
+    "megan"
+   ],
+   "files": [
+    {
+     "id": "L1",
+     "path": "base.ckpt",
+     "kind": "base",
+     "ship": "core",
+     "bytes": 38438260,
+     "sha256": "d96a004a97c00d1eba1f5601c4e10d2e11c62f0cd98f053e3f47f70841a0b466",
+     "in_hand": true,
+     "note": "Kekulized ZINC-250k base after two rounds of structural-sanity reinforcement learning (not a plain unconditional base)."
+    },
+    {
+     "id": "L2",
+     "path": "base.schema.json",
+     "kind": "schema",
+     "ship": "core",
+     "bytes": 440,
+     "sha256": "449dba3d0a9a2ecc4742a9b8a019d37626193faf8b399cc12a3b555c25b7b493",
+     "in_hand": true,
+     "note": "Vocabulary and size range of the base."
+    },
+    {
+     "id": "L3",
+     "path": "property_adapter.ckpt",
+     "kind": "adapter",
+     "ship": "core",
+     "bytes": 26619111,
+     "sha256": "2113519793729fcb86c2655ce38879b82b6571dafa264eb4820f8a14039d65a6",
+     "in_hand": true,
+     "note": "Crippen logP adapter on the decoded molecule; no training log exists for this file."
+    },
+    {
+     "id": "L4",
+     "path": "concept_adapter.ckpt",
+     "kind": "adapter",
+     "ship": "core",
+     "bytes": 26655375,
+     "sha256": "7ba21a6f20734d65eb602ccb1f78f26467c3f2762050ba77c2419aef53bfc763",
+     "in_hand": true,
+     "note": "Concept adapter on the 42-dimensional membership vector (learning rate 3e-4 chosen for the paper)."
+    },
+    {
+     "id": "L5",
+     "path": "megan/model.ckpt",
+     "kind": "megan_model",
+     "ship": "core",
+     "bytes": 52489682,
+     "sha256": "69d49725c5709a4577e48d83a514842cd481391e5536f331d2ec2519ec46e153",
+     "in_hand": true,
+     "note": "Self-explaining GNN for Crippen logP (regression, two channels)."
+    },
+    {
+     "id": "L6",
+     "path": "megan/clustering.clu",
+     "kind": "clustering",
+     "ship": "core",
+     "bytes": 17941021,
+     "sha256": "6ab2ad69aeb12a6bfb615532415c8481c5c9794a6492c5ff2bc6a63541c6068b",
+     "in_hand": true,
+     "note": "Concept clustering, 42 concepts (channel 0: 15, channel 1: 27)."
+    },
+    {
+     "id": "L7",
+     "path": "megan/process.py",
+     "kind": "processing_module",
+     "ship": "core",
+     "bytes": 6574,
+     "sha256": "655a8a75a46b5c659cd6b544e5b5286870187a290dd94c836e6be47418bac494",
+     "in_hand": true,
+     "note": "Executable featurizer (45 node, 11 edge features); identical to the one of the Ames model."
+    },
+    {
+     "id": "L8a",
+     "path": "megan/report_test.json",
+     "kind": "report",
+     "ship": "core",
+     "bytes": 2328,
+     "sha256": "5c48e4ffed6f3375500faa63abd4981e8af88757e0abdbfee26567955a71206f",
+     "in_hand": true,
+     "note": "Test-set quality report."
+    },
+    {
+     "id": "L8b",
+     "path": "megan/report_val.json",
+     "kind": "report",
+     "ship": "core",
+     "bytes": 2333,
+     "sha256": "044764089aa64f86157fd3c0fe41da1af8a8bdede694efff67f8f6eedab886c7",
+     "in_hand": true,
+     "note": "Validation-set quality report."
+    },
+    {
+     "id": "L8c",
+     "path": "megan/concept_report.pdf",
+     "kind": "report",
+     "ship": "optional",
+     "bytes": 21438151,
+     "sha256": "4b177b2207c3b59601b4c07e180f633d08ef3f57bd00d63730c58d1d2653c757",
+     "in_hand": true,
+     "note": "Illustrated concept report."
+    },
+    {
+     "id": "L9",
+     "path": "data/concept_targets.npz",
+     "kind": "concept_targets",
+     "ship": "core",
+     "bytes": 3163,
+     "sha256": "d22489be7834d4a8833ad1a92ea4550265f5fa010f0f66443fe24787de7ceeaf",
+     "in_hand": true,
+     "note": "Request vectors (42 x 42)."
+    },
+    {
+     "id": "L10",
+     "path": "data/concept_table.json",
+     "kind": "concept_table",
+     "ship": "core",
+     "bytes": 11105,
+     "sha256": "b3d90f689df88f5e0c61caf195c53cfec94dc20d8791719b6ff4fbcaa815a92e",
+     "in_hand": true,
+     "note": "Concept list and scoring settings (fidelity threshold 0.75)."
+    },
+    {
+     "id": "L11",
+     "path": "data/concept_conditions.npz",
+     "kind": "concept_conditions",
+     "ship": "withheld",
+     "bytes": 3398008,
+     "sha256": "c0ae4fd02e690395e4dfcbc0690165534f0684de045ff781dc6bc83b873fb900",
+     "in_hand": true,
+     "note": "Membership vectors of 65,434 molecules; holds SMILES, so it is withheld pending the licence decision."
+    },
+    {
+     "id": "L12a",
+     "path": "data/labels.csv",
+     "kind": "labels",
+     "ship": "withheld",
+     "bytes": 3733500,
+     "sha256": "76cdd0188d94dec27c90d900b9e54051c18e5e3108828e30d95343442ed91a12",
+     "in_hand": true,
+     "note": "SMILES with Crippen logP of 65,434 molecules; withheld pending the licence decision."
+    },
+    {
+     "id": "L12b",
+     "path": "data/logp.npy",
+     "kind": "labels",
+     "ship": "withheld",
+     "bytes": 523600,
+     "sha256": "28f0f45d6e5aafaac8aa9af884a6d6b468e17bfd9d9f82ed461791869acc8d58",
+     "in_hand": true,
+     "note": "logP column of the table above; withheld with it."
+    }
+   ]
+  },
+  "ames": {
+   "title": "Ames mutagenicity",
+   "requires": [
+    "chem",
+    "megan"
+   ],
+   "files": [
+    {
+     "id": "A1",
+     "path": "base.ckpt",
+     "kind": "base",
+     "ship": "core",
+     "bytes": 38475230,
+     "sha256": "8e957a1b50b833e299c1df51d2ad927af58cb9ba0a493a606991e817da6e48c7",
+     "in_hand": true,
+     "note": "Charge-aware base (12 atom classes incl. N+, O-, N-), trained on ZINC and ChEMBL molecules."
+    },
+    {
+     "id": "A16a",
+     "path": "base.vocabulary.json",
+     "kind": "vocabulary",
+     "ship": "core",
+     "bytes": 1758,
+     "sha256": "c8c8e318ec4ece1fc4ce35380e491a1c1dccfd24476d9f20f0b9eae42ca330a0",
+     "in_hand": true,
+     "note": "Atom and bond vocabulary of the charge-aware base; no checkpoint stores it."
+    },
+    {
+     "id": "A16b",
+     "path": "base.corpus_report.json",
+     "kind": "report",
+     "ship": "optional",
+     "bytes": 1437,
+     "sha256": "a853f65bc78fcf9e87879ed004fe79f8320a73b4c7345596edf5a711b61ed8e7",
+     "in_hand": true,
+     "note": "Corpus filter counts and marginals."
+    },
+    {
+     "id": "A2",
+     "path": "label_adapter.ckpt",
+     "kind": "adapter",
+     "ship": "core",
+     "bytes": 26618896,
+     "sha256": "14476d998493ad04ef30e2ddd6a920ce23127206aa467d273d418eec5d3df95d",
+     "in_hand": false,
+     "note": "Class adapter on the measured 0/1 label (cross-attention and Fourier bands); used at weight 1.5."
+    },
+    {
+     "id": "A3",
+     "path": "concept_adapter.ckpt",
+     "kind": "adapter",
+     "ship": "core",
+     "bytes": 26641935,
+     "sha256": "3877f0b8985d569ecbe2a9bbaa2e0b5eeab02827fd6fe3de5ecf789db03e0469",
+     "in_hand": true,
+     "note": "Concept adapter on the 29-dimensional membership vector (learning rate 3e-4 chosen for the paper)."
+    },
+    {
+     "id": "A4",
+     "path": "megan/model.ckpt",
+     "kind": "megan_model",
+     "ship": "core",
+     "bytes": 52489938,
+     "sha256": "c6bc92771180697c8e01b857b058741d37f55ea5dbee0ae91e5613b7b753c632",
+     "in_hand": true,
+     "note": "Self-explaining GNN for the mutagenicity class (classification, two channels)."
+    },
+    {
+     "id": "A5",
+     "path": "megan/clustering.clu",
+     "kind": "clustering",
+     "ship": "core",
+     "bytes": 1633316,
+     "sha256": "5ce995669dbee09a46650f8b964f0b1b093070c62df7322e06f6a90a68f54507",
+     "in_hand": true,
+     "note": "Concept clustering, 29 concepts."
+    },
+    {
+     "id": "A6",
+     "path": "megan/process.py",
+     "kind": "processing_module",
+     "ship": "core",
+     "bytes": 6574,
+     "sha256": "655a8a75a46b5c659cd6b544e5b5286870187a290dd94c836e6be47418bac494",
+     "in_hand": true,
+     "note": "Executable featurizer; identical to the logP model's."
+    },
+    {
+     "id": "A7a",
+     "path": "megan/report_test.json",
+     "kind": "report",
+     "ship": "core",
+     "bytes": 2323,
+     "sha256": "585acb0e57ea8c5ccf5589bedf379c99a15ef77e5ab244ca3eb88eb5fcd5920c",
+     "in_hand": true,
+     "note": "Test-set quality report."
+    },
+    {
+     "id": "A7b",
+     "path": "megan/report_val.json",
+     "kind": "report",
+     "ship": "core",
+     "bytes": 2331,
+     "sha256": "a86ba6668e44e0d1f0582f7ba29ea36401eb3b5536df97a2149d0d9cf737dbf7",
+     "in_hand": true,
+     "note": "Validation-set quality report."
+    },
+    {
+     "id": "A7c",
+     "path": "megan/concept_report.pdf",
+     "kind": "report",
+     "ship": "optional",
+     "bytes": 14456272,
+     "sha256": "8ddbb1e616aca21cd1d5bc8ee203f9489df49bc7236aaa4eee7d25cbe5fc7d18",
+     "in_hand": true,
+     "note": "Illustrated concept report."
+    },
+    {
+     "id": "A8",
+     "path": "data/concept_targets.npz",
+     "kind": "concept_targets",
+     "ship": "core",
+     "bytes": 2108,
+     "sha256": "0dc370326263fedf9ae9bc1abbbbfba9c533da71960cff15e79de2fd67f06e23",
+     "in_hand": true,
+     "note": "Request vectors (29 x 29)."
+    },
+    {
+     "id": "A9",
+     "path": "data/concept_table.json",
+     "kind": "concept_table",
+     "ship": "core",
+     "bytes": 7792,
+     "sha256": "ab7ce588250c76478331aba8fb73e68a92b503f32b279769f6706a2832f0fcee",
+     "in_hand": true,
+     "note": "Concept list and scoring settings."
+    },
+    {
+     "id": "A10",
+     "path": "data/sizes.json",
+     "kind": "size_model",
+     "ship": "core",
+     "bytes": 533,
+     "sha256": "710122fd4aa070abfd7e8d78107fde7986d6608ba6a1daf93a5c82f9f130e771",
+     "in_hand": true,
+     "note": "Heavy-atom histogram the Ames runs draw graph sizes from."
+    },
+    {
+     "id": "A11",
+     "path": "data/cells.json",
+     "kind": "concept_table",
+     "ship": "core",
+     "bytes": 3089,
+     "sha256": "e3b3842c613489bf68cd7a33f30e6cbf9f09b640b16d0913c9c95c6c109c0854",
+     "in_hand": true,
+     "note": "The seven named concepts with their structural alerts."
+    },
+    {
+     "id": "A12",
+     "path": "data/prob_pred.npy",
+     "kind": "golden",
+     "ship": "core",
+     "bytes": 25332,
+     "sha256": "86b80f4ca6d4a5e3a60d2a98d47c54fcbc472c1f870b6d44c36c4cb79c5f652b",
+     "in_hand": true,
+     "note": "Reference P(mutagenic) of the GNN for the 6,301 training graphs."
+    },
+    {
+     "id": "A13",
+     "path": "data/concept_conditions.npz",
+     "kind": "concept_conditions",
+     "ship": "withheld",
+     "bytes": 242936,
+     "sha256": "41cf777e1ab63a8edaeb83cdfad1b83cf7299a5ae7bcf2c518e945867a8b0fe9",
+     "in_hand": true,
+     "note": "Membership vectors of 6,301 molecules; holds SMILES, so it is withheld (non-commercial data licence)."
+    },
+    {
+     "id": "A14a",
+     "path": "data/labels.csv",
+     "kind": "labels",
+     "ship": "withheld",
+     "bytes": 197393,
+     "sha256": "b04bb3077bf352499d067f6126e5d62585ba6bc11de9f3088e5fdebec04c0194",
+     "in_hand": true,
+     "note": "SMILES with the Ames label; withheld (non-commercial data licence)."
+    },
+    {
+     "id": "A14b",
+     "path": "data/labels_meta.csv",
+     "kind": "labels",
+     "ship": "withheld",
+     "bytes": 607448,
+     "sha256": "ffaa3e428aa11bf8943e32bad69318428eca401694f963b42ac52874124807db",
+     "in_hand": true,
+     "note": "Same with source SMILES and names; withheld."
+    },
+    {
+     "id": "A15a",
+     "path": "data/label_conditions.npz",
+     "kind": "labels",
+     "ship": "withheld",
+     "bytes": 152248,
+     "sha256": "a090a6e4500e71b10a2d5d318e7840a2d905c99cd9c5558a45541319512e0e5a",
+     "in_hand": true,
+     "note": "Label-adapter table (object arrays); withheld."
+    },
+    {
+     "id": "A15b",
+     "path": "data/label_split.json",
+     "kind": "labels",
+     "ship": "withheld",
+     "bytes": 63243,
+     "sha256": "8e4adba97e1112e87d5ca302e552a5c4192a393a2530cddd757de1a7f450721d",
+     "in_hand": true,
+     "note": "Train / held-out split of the label adapter; also lists target molecules with SMILES and labels, so it is withheld."
+    }
+   ]
+  }
+ }
+}
