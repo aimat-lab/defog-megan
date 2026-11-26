@@ -32,16 +32,13 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: pip
           cache-dependency-path: pyproject.toml
-      # Until defog-adapt is on PyPI its repository is the source, and this package is installed without
-      # dependencies (its own pin `defog-adapt>=0.1.0` would not accept the development version).
-      # Replace these three lines by `pip install -e ".[chem,dev]"` once a release exists.
-      - name: Install (CPU PyTorch first, so the resolver does not pull a CUDA build)
+      # torch is installed first, as the CPU build and at the version the explainer stack allows (torch<2.5.1), so that
+      # the resolver does not pull a CUDA build.
+      - name: Install
         run: |
           python -m pip install --upgrade pip
-          pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install "defog-adapt[chem] @ git+https://github.com/aimat-lab/defog-adapt@main"
-          pip install -e . --no-deps
-          pip install pytest pytest-xdist
+          pip install "torch==2.5.0" --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[chem,megan,experiments,dev]"
       - name: Unit tests
         run: pytest -n auto -q
 

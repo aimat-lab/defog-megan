@@ -13,7 +13,7 @@ license-files = ["LICENSE", "NOTICE"]
 authors = [
     { name = "Jonas Teufel", email = "jonseb1998@gmail.com" },
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.13"
 keywords = [
     "graph generation", "discrete flow matching", "conditional generation", "explainable AI",
     "concept explanations", "adapters", "molecular generation", "pytorch",
@@ -30,11 +30,12 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Chemistry",
 ]
 
-# The generator side (models, adapters, composition, Feynman-Kac steering, inpainting) is defog-adapt. Until a release
-# of it is on PyPI, install it from its repository first and this package with --no-deps (see CLAUDE.md).
+# The generator side (models, adapters, composition, Feynman-Kac steering, inpainting) is defog-adapt, released on PyPI.
 dependencies = [
     "defog-adapt>=0.1.0",
     "numpy>=1.23",
+    "networkx>=2.8",
+    "pandas>=1.4",
 ]
 
 [project.optional-dependencies]
@@ -42,14 +43,21 @@ dependencies = [
 chem = ["defog-adapt[chem]>=0.1.0"]
 # The explainer side: the self-explaining GNN, the concept extraction and the dataset/processing format. Needed for
 # Feynman-Kac steering (the GNN is the energy), for grading and for building membership tables of new data; not for
-# training adapters or for sampling without steering. The pins of these releases may restrict torch and numpy.
+# training adapters or for sampling without steering.
+#  * graph_attention_student releases before 1.6.0 load the shipped checkpoints without error and return wrong
+#    memberships, so 1.6.0 is a hard floor.
+#  * That release pins numpy<2, and from pyarrow 26 on pyarrow requires numpy>=2, so without the cap the stack does not
+#    import on Python 3.12 (tested: Python 3.10 to 3.12 work with it).
 megan = [
     "graph_attention_student>=1.6.0",
     "megan_global_explanations>=0.6.0",
     "visual_graph_datasets>=0.17.0",
+    "pyarrow<26",
 ]
-dev = ["pytest>=7", "pytest-xdist", "build", "twine"]
-all = ["defog-megan[chem,megan,dev]"]
+# The runnable experiments (they are PyComex experiments).
+experiments = ["pycomex>=0.27.0"]
+dev = ["pytest>=7", "pytest-xdist", "build"]
+all = ["defog-megan[chem,megan,experiments,dev]"]
 
 [project.urls]
 Homepage = "https://github.com/aimat-lab/defog-megan"
