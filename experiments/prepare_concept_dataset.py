@@ -111,6 +111,8 @@ LIMIT: int = 0            # 0 = all molecules
 
 __DEBUG__: bool = False
 __TESTING__: bool = False
+# no desktop notification when a run ends: on a machine without a desktop session it fails with a (harmless) traceback
+__NOTIFY__: bool = False
 
 
 @Experiment(base_path=folder_path(__file__), namespace=file_namespace(__file__), glob=globals())

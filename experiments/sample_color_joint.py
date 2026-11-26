@@ -172,6 +172,8 @@ SEED: int = 42
 # False: every run gets its own time-stamped folder (True writes to one `debug/` folder, which the next run wipes).
 __DEBUG__: bool = False
 __TESTING__: bool = False
+# no desktop notification when a run ends: on a machine without a desktop session it fails with a (harmless) traceback
+__NOTIFY__: bool = False
 
 
 def _wtag(wc: float, wp: float) -> str:
