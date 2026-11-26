@@ -69,6 +69,22 @@ scorers, with the explainer recomputing every membership vector, and the outputs
   byte for byte. The memberships of that pool, recomputed by the chain on a CPU, are bitwise equal to the paper's (all 65,434 x 42
   values, so no molecule changes its core or periphery status), and so is the logP of every molecule.
 
+## 5. That the experiments run
+
+Parity says the outputs are the research code's. This says that a user gets them from a clean checkout.
+
+- **Every experiment and script in its tiny testing mode** (a few graphs, 20 steps) exits cleanly on a CPU, and the samplers,
+  evaluations and trainings also on a GPU, with the device recorded in the manifests. The reproduction scripts of Experiments 2 to 4
+  (sampling, shard collection, scoring; `NUM_SHARDS=1`) run through on a GPU. `scripts/predict_pool_property.py` and
+  `scripts/pool_logp.py` give the zoo's property tables exactly, and `scripts/score_ames_lr_selection.py` prints what the
+  research script printed on the same samples.
+- **One unit of each sampler at the paper's settings** (500 steps, 16 particles, chunks of 64, the explainer in the loop) ran on
+  an RTX 3060 and produced only valid graphs: 128 colored graphs in 10 minutes, 256 ZINC molecules in 14 (their logP centred on
+  the requested 0.5, mean 0.45) and 256 Ames molecules in 12; the GPU memory in use stayed under 2 GB.
+- **Installation** of `[chem,megan,experiments]` from PyPI into new environments worked on Python 3.10 (the development
+  environment), 3.11 (CPU and CUDA torch, on a second machine) and 3.12 (with `pyarrow<26`); the unit tests pass in them, and the table
+  chain of the molecular groups ran in the second machine's environment.
+
 ## What was found on the way
 
 - **A check that moves the random stream.** The explainer builds a data loader on every call, and a data loader draws its base

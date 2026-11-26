@@ -87,6 +87,11 @@ reproduce/exp2_colored_joint.sh                                  # long on one G
 EXTRA="--__TESTING__ True" NUM_SHARDS=1 reproduce/exp2_colored_joint.sh     # a tiny run of the whole chain, minutes on a CPU
 ```
 
+**What it costs.** One Feynman-Kac unit at the paper's settings (500 steps, 16 particles, the explainer on the CPU) took about 10
+minutes for 128 colored graphs (Experiment 2), 14 minutes for 256 molecules (Experiment 3) and 12 minutes for 256 Ames molecules
+(Experiment 4) on an RTX 3060 with 8 CPU threads, using under 2 GB of the GPU's memory. The joint rungs of the paper (1024 graphs
+per cell) took on the order of 100 GPU-hours in all; `NUM_SHARDS` splits them over devices.
+
 **What a rerun gives.** Sampling is stochastic and a GPU run is not bit-reproducible across hardware, so a rerun agrees with the
 paper within sampling error, not exactly. The scorers, on the other hand, are exact functions of the samples: given the paper's
 own samples they give the paper's numbers (checked: Tables 1 and 2 come out identical to the reports of the research code,
