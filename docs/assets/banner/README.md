@@ -8,8 +8,9 @@ of the sampler**, twice, from the **same noise**:
 2. a concept adapter docks next to the logP adapter, and the same noise ends in a different molecule at logP 2.5 whose
    explanation is the concept that was asked for (A, purple).
 
-It follows the two-run format of the [defog-adapt](https://github.com/aimat-lab/defog-adapt) banner: a first run, then the
-same noise again with one more adapter docked on the frozen model. It illustrates the process. It is **not a measurement**:
+It follows the two-run format of the [defog-adapt](https://github.com/aimat-lab/defog-adapt) banner, without that banner's
+wordmark: a first run, then the same noise again with one more adapter docked on the frozen model. The two adapters dock at
+one level, the logP adapter on the left and the concept adapter on the right. It illustrates the process. It is **not a measurement**:
 the pair was chosen from many for legibility.
 
 ## What is recorded, what is computed, what is drawn, what was chosen
@@ -35,7 +36,7 @@ the base's own distribution. The two molecules are `CCSc1ccc(NCC2CCNC2)cc1C#N` (
 
 | file | what it is |
 |---|---|
-| `banner.gif` | the animation: 1600 x 431 px, 251 frames at 15 fps, about 2.4 MB |
+| `banner.gif` | the animation, which is the whole banner: 1600 x 494 px, 251 frames at 15 fps, about 3.1 MB |
 | `trajectory.json` | the recorded run: both trajectories, the shared noise, the explanation of each finished molecule and every setting above |
 | `record_trajectories.py` | `record` same-noise pairs from the zoo and rank them, `rank` again, `export` one pair |
 | `candidates.py` | the contact sheet of the ranked candidate pairs, drawn the way the banner draws molecules |

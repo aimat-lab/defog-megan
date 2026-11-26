@@ -1,4 +1,4 @@
-"""README banner, one frame: wordmark on the left, and on the right a REAL recorded run of the frozen DeFoG base.
+"""README banner, one frame: a REAL recorded run of the frozen DeFoG base, across the whole banner.
 
 The animation has two beats on the SAME noise. Beat 1: the frozen base, with a flame-marked logP adapter docked on
 it, turns the noise into a molecule at the requested logP; the explainer's explanation of that molecule glows in the
@@ -25,12 +25,12 @@ from types import SimpleNamespace
 
 import numpy as np
 from figlib import *  # noqa: F401,F403
-from figlib import _svg_file, fonts
+from figlib import _svg_file
 from molecules import (assign_slots, draw_state, fit_layout, keep_apart, lerp_points, molecule_layout, pct,
                        scatter_layout)
 
 NAME = 'banner'
-SIZE = (468, 126)                  # about 3.7:1; the type sizes are those of the thesis figures (7 pt labels)
+SIZE = (408, 126)                  # about 3.2:1; the animation is the whole banner; type sizes as in the thesis figures (7 pt labels)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.environ.get('BANNER_DATA', os.path.join(HERE, 'trajectory.json'))
@@ -38,12 +38,10 @@ FRAME = int(os.environ.get('BANNER_FRAME', '120'))
 
 # ------------------------------------------------------------------------------ layout (pt)
 MID = 58                           # centre line of the stations
-LEFT = 14                          # left margin of the wordmark
-WM_SIZE, WM_BASE, TAG_BASE = 30, 61, 77          # wordmark size and baseline, tagline baseline
-X_NOISE, NOISE_W, NOISE_H = 222, 52, 48          # noise graph: centre and extent of its scatter
-X_MODEL, MW, MH, TAPER = 270, 60, 46, 0.38       # frozen DeFoG: left edge, width, height
-X_SAMPLE, SAMPLE_W, SAMPLE_H, BOND_MAX = 405, 74, 40, 11.0
-X_OUT = 353                        # where the arrow from the model ends
+X_NOISE, NOISE_W, NOISE_H = 42, 52, 48           # noise graph: centre and extent of its scatter
+X_MODEL, MW, MH, TAPER = 164, 60, 46, 0.38       # frozen DeFoG: left edge, width, height (centred between the stations)
+X_SAMPLE, SAMPLE_W, SAMPLE_H, BOND_MAX = 356, 74, 40, 11.0
+X_OUT = 305                        # where the arrow from the model ends
 LABEL = 96                         # baseline of the station labels
 AXIS_Y, TICKS = 110, 10            # the time axis under the stations, and its ticks (every 0.1)
 T_BASE = 120.5                     # baseline of the t counter that rides under the knob
@@ -216,26 +214,6 @@ def ring_ages(i, dock_x):
 
 
 # ------------------------------------------------------------------------------ parts
-def tracked(fig, x, y, s, size, font, color, tracking):
-    """Text with letter-spacing (figlib has none): glyph by glyph. Returns the end x."""
-    for ch in s:
-        fig.text(x, y, ch, size=size, font=font, color=color)
-        x += fonts.text_width(ch, size, font) + tracking
-    return x - tracking
-
-
-def wordmark(fig):
-    """'defog-megan' with the hyphen drawn as a short orange bar (the logP adapter's colour, as in defog-adapt), and
-    the tagline in small letter-spaced capitals."""
-    x = LEFT
-    fig.text(x, WM_BASE, 'defog', size=WM_SIZE, font='rcm')
-    x += fonts.text_width('defog', WM_SIZE, 'rcm') + 2.8
-    fig.rect(x, WM_BASE - 0.31 * WM_SIZE - 1.5, 9, 3, radius=1.5, fill=ORANGE, stroke='none', name='hyphen')
-    x += 9 + 2.8
-    fig.text(x, WM_BASE, 'megan', size=WM_SIZE, font='rcm')
-    tracked(fig, LEFT + 1, TAG_BASE, 'GENERATING GRAPHS FOR A REASON', 6.6, 'rcm', GREY, 1.0)
-
-
 def snowflake(fig, cx, cy, r, color, sw, name='snowflake'):
     """A six-armed snowflake with a V branch on each arm, drawn as round-capped lines."""
     for k in range(6):
@@ -274,6 +252,12 @@ def model_top_y(x):
     return (MID - MH / 2) + t * (x - X_MODEL) / MW
 
 
+def adapter_top():
+    """y of the top of the docked adapters: one level for both. The model's top edge slopes down to the right, so the
+    higher docking point (the logP adapter's) sets the level and the adapter on the right gets the longer stem."""
+    return min(model_top_y(AP_X), model_top_y(AC_X)) - DOCK_GAP - ADAPTER_H
+
+
 def token(fig, cx, cy, r, letter, color, k=1.0, name='concept'):
     """A concept token: a disc in the concept's colour with the concept's letter in it. k fades it in."""
     fig.ellipse(cx, cy, r, fill=mix('#ffffff', color, k), stroke='none', effects=[shadow(0.4, opacity=25 * k)],
@@ -289,7 +273,7 @@ def adapter(fig, x, a, fill, icon, label, side):
     (``side`` -1: left of the adapter, 1: right)."""
     if a < 0.02:
         return
-    dock = model_top_y(x) - DOCK_GAP - ADAPTER_H           # top of the adapter when docked
+    dock = adapter_top()                                   # top of the adapter when docked: the same for both
     y = dock - 15 * (1 - a)
     fig.model(x - ADAPTER_W / 2, y, ADAPTER_W, ADAPTER_H, '', taper=0.38, direction='down', fill=fill, name='adapter')
     fig.emoji(icon, x, y + 0.45 * ADAPTER_H, size=10)
@@ -430,8 +414,6 @@ def build(fig):
     tl = timeline(FRAME)
     t = counter_time(FRAME, tl, d)
     i = FRAME - (B_BEAT1 if tl.run == 'property' else B_BEAT2)           # frame within the beat that is running
-
-    wordmark(fig)
 
     # the noise, the same in both beats
     draw_state(fig, noise_pos, d['noise']['X'], d['noise']['bonds'], atom_types, name='noise')

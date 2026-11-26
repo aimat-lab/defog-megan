@@ -5,7 +5,7 @@ Needs the ``figure`` skill (its figlib drawing library and build.py, found throu
 ~/.claude/skills/figure), VectorCraft's command-line program, Pillow and ffmpeg. These are the author's figure
 tools, so the GIF and trajectory.json are the artefacts a reader can rely on; this is how they were made.
 
-    python3 render_banner.py frames --work WORK [--scale 3.42] [--only 0,50,100] [--jobs 6]
+    python3 render_banner.py frames --work WORK [--scale PX_PER_PT] [--only 0,50,100] [--jobs 6]
     python3 render_banner.py strip  --work WORK --out keyframes.png [--only 8,40,...]
     python3 render_banner.py gif    --work WORK --out banner.gif [--fps 15] [--width 1600]
 
@@ -28,7 +28,7 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 SKILL = os.path.expanduser(os.environ.get("FIGURE_SKILL", "~/.claude/skills/figure"))
 BUILD = os.path.join(SKILL, "scripts", "build.py")
-DEFAULT_SCALE = 1600 / 468          # px per pt for a 1600 px wide banner
+BANNER_WIDTH = 1600                 # px; the frames are rendered at BANNER_WIDTH / (the banner's width in pt) px per pt
 
 
 def banner_module():
@@ -139,7 +139,7 @@ def main():
     for name, fn in (("frames", cmd_frames), ("strip", cmd_strip), ("gif", cmd_gif)):
         p = sub.add_parser(name)
         p.add_argument("--work", required=True)
-        p.add_argument("--scale", type=float, default=DEFAULT_SCALE, help="px per pt of the frames")
+        p.add_argument("--scale", type=float, default=None, help="px per pt of the frames (default: 1600 px wide)")
         p.add_argument("--jobs", type=int, default=6)
         p.add_argument("--only", help="frames, e.g. 0,50,100-120 (default: all)")
         p.set_defaults(fn=fn)
@@ -155,6 +155,8 @@ def main():
             p.add_argument("--dither", default="sierra2_4a", choices=["bayer", "sierra2_4a", "none"])
             p.add_argument("--bayer", type=int, default=4)
     args = ap.parse_args()
+    if args.scale is None:
+        args.scale = BANNER_WIDTH / banner_module().SIZE[0]
     args.fn(args)
 
 
