@@ -148,6 +148,112 @@
      "pins": "the end-to-end conditioned model with its standardized condition, guidance 1"
     }
    }
+  },
+  "paper": {
+   "config": {
+    "steps": {
+     "base_sampling": 500,
+     "explicit_size": 500,
+     "property_adapter": 500,
+     "concept_adapter": 500,
+     "joint_product": 500,
+     "fk_joint": 500,
+     "native_conditioned": 500
+    },
+    "graphs": {
+     "base_sampling": 4,
+     "explicit_size": 4,
+     "property_adapter": 4,
+     "concept_adapter": 4,
+     "joint_product": 4,
+     "fk_joint": 16,
+     "native_conditioned": 4
+    }
+   },
+   "cases": {
+    "base_sampling": {
+     "digest": "eabcd4478e2b5f35ff25b63cc2dcd50be3f6180d33c46364c240a6da549fa892",
+     "sizes": [
+      23,
+      27,
+      27,
+      26
+     ],
+     "pins": "unconditional sampling, node counts from the base's own distribution"
+    },
+    "explicit_size": {
+     "digest": "ac692dc143d352ff066ab600be8bee77553db4c675180406839da8ed13b9807c",
+     "sizes": [
+      12,
+      12,
+      12,
+      12
+     ],
+     "pins": "sampling with an explicit node count (the size-sweep path)"
+    },
+    "property_adapter": {
+     "digest": "08339f5cf441cf27fa43e6818b803842fd49f285a968b2a23da581fac866fe25",
+     "sizes": [
+      22,
+      28,
+      38,
+      26
+     ],
+     "pins": "the property adapter alone at its paper weight"
+    },
+    "concept_adapter": {
+     "digest": "7d22d598e69916bc6654a0e89693b06d72a10ddda2e310269f91a471d158935c",
+     "sizes": [
+      32,
+      37,
+      23,
+      42
+     ],
+     "pins": "the concept adapter alone at its paper weight"
+    },
+    "joint_product": {
+     "digest": "59bc8328e9a88ef7f02d902ee815885985a4874c5b941fbb75f2fc5b1dbae75d",
+     "sizes": [
+      35,
+      28,
+      30,
+      29
+     ],
+     "pins": "both adapters composed as a plain sum at the selected weights (1, 1)"
+    },
+    "fk_joint": {
+     "digest": "add672fe88d7bcff7b688652b1634e9803cdd7c47a2e6885c1db311cd3d5f6ef",
+     "sizes": [
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30,
+      30
+     ],
+     "pins": "Feynman-Kac steering of the composition, multinomial resampling, deterministic stand-in energy"
+    },
+    "native_conditioned": {
+     "digest": "3dfd21fde75da949febd6645679d8d932b6106fcac58639383d26289d51f5405",
+     "sizes": [
+      28,
+      28,
+      40,
+      36
+     ],
+     "pins": "the end-to-end conditioned model with its standardized condition, guidance 1"
+    }
+   }
   }
  }
 }
