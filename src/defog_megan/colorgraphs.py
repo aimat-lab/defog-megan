@@ -682,3 +682,33 @@ def distribution_score(report: dict) -> float:
     """
     total_kl = report["kl_colors"] + report["kl_degrees"] + report["kl_sizes"]
     return float(np.exp(-total_kl) * report["connected_rate"])
+
+
+def _to_nx(data):
+    """PyG -> networkx with the colour class attached as the node label."""
+    import networkx as nx
+
+    g = nx.Graph()
+    classes = np.asarray(data.x).argmax(axis=1) if getattr(data, "x", None) is not None \
+        else np.zeros(data.num_nodes, dtype=int)
+    for i in range(int(data.num_nodes)):
+        g.add_node(i, color=int(classes[i]))
+    ei = np.asarray(data.edge_index)
+    if ei.size:
+        for a, b in np.unique(np.sort(ei.T, axis=1), axis=0):
+            if a != b:
+                g.add_edge(int(a), int(b))
+    return g
+
+
+def wl_hash(data) -> str:
+    """Isomorphism-invariant, colour-aware key of one graph.
+
+    A Weisfeiler-Lehman hash (three iterations) over the graph with the node colour as the node
+    label. It stands in for a SMILES string wherever graphs are counted as distinct (uniqueness,
+    novelty, the distinct joint hits of the steering experiments). Edge direction and node order
+    do not matter.
+    """
+    import networkx as nx
+
+    return nx.weisfeiler_lehman_graph_hash(_to_nx(data), node_attr="color", iterations=3)

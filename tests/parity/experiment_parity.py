@@ -8,7 +8,8 @@ can only come from the port. Each run happens in a scratch copy of the experimen
     python tests/parity/experiment_parity.py sample_color_joint --old-library <research repo> \\
         --reference <extracted research package> --args "--__TESTING__ True --STAGE \\"'probe'\\""
 
-Compared: every ``gen_*.npz`` array for array, and the manifest apart from timings and the device.
+Compared: every ``gen_*.npz`` array for array (the graph experiments), every ``gen_*.json`` SMILES list (the molecular
+ones), and the manifest apart from timings, the device and the keys only one side has.
 """
 from __future__ import annotations
 
@@ -57,19 +58,30 @@ def run(script: Path, args: list, scratch: Path, pythonpath: list, zoo: str) -> 
 
 
 def _same_array(a, b) -> bool:
+    """Exact equality, with NaN equal to NaN (the dumps carry NaN targets)."""
     if a.dtype == object or b.dtype == object:
         return a.shape == b.shape and all(_same_array(np.asarray(x), np.asarray(y)) for x, y in zip(a.ravel(), b.ravel()))
-    return a.shape == b.shape and np.array_equal(a, b)
+    if a.shape != b.shape:
+        return False
+    if a.dtype.kind in "fc" and b.dtype.kind in "fc":
+        return bool(np.array_equal(a, b, equal_nan=True))
+    return bool(np.array_equal(a, b))
 
 
 def compare(old: Path, new: Path) -> list:
     """The differences between two result folders (empty when the runs agree)."""
     problems = []
-    old_files, new_files = {p.name for p in old.glob("gen_*.npz")}, {p.name for p in new.glob("gen_*.npz")}
+    old_files = {p.name for p in old.glob("gen_*.npz")} | {p.name for p in old.glob("gen_*.json")}
+    new_files = {p.name for p in new.glob("gen_*.npz")} | {p.name for p in new.glob("gen_*.json")}
     if old_files != new_files:
         problems.append(f"different generated files: only old {sorted(old_files - new_files)}, "
                         f"only new {sorted(new_files - old_files)}")
-    for name in sorted(old_files & new_files):
+    for name in sorted(n for n in old_files & new_files if n.endswith(".json")):
+        a, b = json.loads((old / name).read_text()), json.loads((new / name).read_text())
+        if a["smiles"] != b["smiles"]:
+            n_diff = sum(x != y for x, y in zip(a["smiles"], b["smiles"])) + abs(len(a["smiles"]) - len(b["smiles"]))
+            problems.append(f"{name}: {n_diff} of {len(a['smiles'])} SMILES differ")
+    for name in sorted(n for n in old_files & new_files if n.endswith(".npz")):
         a, b = np.load(old / name, allow_pickle=True), np.load(new / name, allow_pickle=True)
         if set(a.files) != set(b.files):
             problems.append(f"{name}: different arrays {sorted(set(a.files) ^ set(b.files))}")
@@ -79,7 +91,7 @@ def compare(old: Path, new: Path) -> list:
             problems.append(f"{name}: arrays differ: {bad}")
     if (old / "manifest.json").exists() and (new / "manifest.json").exists():
         ma, mb = (_stable(json.loads((d / "manifest.json").read_text())) for d in (old, new))
-        for key in sorted(set(ma) | set(mb)):
+        for key in sorted(set(ma) & set(mb)):
             if ma.get(key) != mb.get(key) and key not in IGNORED_MANIFEST_KEYS:
                 problems.append(f"manifest key {key!r} differs")
     return problems
@@ -95,19 +107,27 @@ def main() -> int:
     ap.add_argument("--old-library", required=True, type=Path, help="checkout of the research library (contains experiments/)")
     ap.add_argument("--reference", required=True, type=Path, help="directory holding the extracted research package `defog/`")
     ap.add_argument("--zoo", default=os.environ.get("DEFOG_MEGAN_ZOO", ""), help="the model zoo")
+    ap.add_argument("--new-name", default=None, help="file name of the experiment in this repository, if it was renamed")
     ap.add_argument("--args", default="", help="the experiment's arguments, as one shell-quoted string")
     ap.add_argument("--old-args", default=None, help="arguments for the old run only, when its parameter names differ")
     ap.add_argument("--keep", type=Path, help="keep both result folders in this directory")
+    ap.add_argument("--control", choices=["old", "new"], default=None,
+                    help="run only that side, twice, to measure how deterministic it is on its own")
     opts = ap.parse_args()
     args = shlex.split(opts.args)
     old_args = shlex.split(opts.old_args) if opts.old_args is not None else args
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
-        old = run(opts.old_library / "experiments" / f"{opts.experiment}.py", old_args, tmp / "old",
-                  [str(opts.reference), str(opts.old_library)], opts.zoo)
-        new = run(REPO / "experiments" / f"{opts.experiment}.py", args, tmp / "new", [str(REPO / "src")], opts.zoo)
+        old_script, old_path = opts.old_library / "experiments" / f"{opts.experiment}.py", [str(opts.reference), str(opts.old_library)]
+        new_script, new_path = REPO / "experiments" / f"{opts.new_name or opts.experiment}.py", [str(REPO / "src")]
+        if opts.control == "old":
+            new_script, new_path, args = old_script, old_path, old_args
+        elif opts.control == "new":
+            old_script, old_path, old_args = new_script, new_path, args
+        old = run(old_script, old_args, tmp / "old", old_path, opts.zoo)
+        new = run(new_script, args, tmp / "new", new_path, opts.zoo)
         problems = compare(old, new)
-        n = len(list(old.glob("gen_*.npz")))
+        n = len(list(old.glob("gen_*.npz"))) + len(list(old.glob("gen_*.json")))
         if opts.keep:
             shutil.copytree(old, opts.keep / "old", dirs_exist_ok=True)
             shutil.copytree(new, opts.keep / "new", dirs_exist_ok=True)

@@ -30,10 +30,13 @@ CORE = 0.5
 def decode_samples(samples, atom_decoder, bond_decoder) -> t.Tuple[t.List[str], dict]:
     """Decode generated PyG graphs into canonical SMILES.
 
+    A vocabulary with charged atom classes (the Ames base) is read strictly, any other the relaxed way, as in
+    :mod:`defog_megan.molecules`.
+
     :returns: ``(smiles, stats)`` where ``smiles`` holds only the valid molecules
         and ``stats`` carries validity/uniqueness over the full sample list.
     """
-    from defog_adapt.domains.molecule import pyg_data_to_mol, mol_to_smiles
+    from defog_megan.molecules import mol_to_smiles, pyg_data_to_mol
 
     valid = []
     for sample in samples:

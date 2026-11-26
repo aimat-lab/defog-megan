@@ -34,6 +34,7 @@ from defog_megan.colorgraphs import (
     save_pool_npz,
     structural_report,
     vgd_to_pyg,
+    wl_hash,
 )
 
 
@@ -270,3 +271,29 @@ def test_save_pool_npz_accepts_cuda_resident_graphs():
     save_pool_npz(path, [data], [{}])          # must not raise
     loaded, _ = load_pool_npz(path)
     assert loaded[0].x.shape[0] == 3
+
+
+# -- the isomorphism key -------------------------------------------------------------
+
+
+def _pyg(classes, edges):
+    return vgd_to_pyg(make_graph(classes, edges))
+
+
+def test_wl_hash_ignores_node_order():
+    # a path 0-1-2 with colours (RED, GRAY, BLUE), and the same graph with the nodes listed in reverse order
+    a = _pyg([RED, GRAY, BLUE], [(0, 1), (1, 2)])
+    b = _pyg([BLUE, GRAY, RED], [(1, 2), (0, 1)])
+    assert wl_hash(a) == wl_hash(b)
+
+
+def test_wl_hash_separates_colourings_of_the_same_shape():
+    a = _pyg([RED, GRAY, BLUE], [(0, 1), (1, 2)])
+    b = _pyg([RED, GRAY, RED], [(0, 1), (1, 2)])
+    assert wl_hash(a) != wl_hash(b)
+
+
+def test_wl_hash_separates_shapes_with_the_same_colours():
+    path = _pyg([RED, RED, RED, RED], [(0, 1), (1, 2), (2, 3)])
+    star = _pyg([RED, RED, RED, RED], [(0, 1), (0, 2), (0, 3)])
+    assert wl_hash(path) != wl_hash(star)

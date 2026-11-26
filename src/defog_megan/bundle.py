@@ -11,11 +11,14 @@ or a corrupted file shows up there, where nothing downstream would show it.
 """
 from __future__ import annotations
 
+import contextlib
 import json
+import random
 import typing as t
 from pathlib import Path
 
 import numpy as np
+import torch
 
 from defog_megan.zoo import zoo_path
 
@@ -60,14 +63,42 @@ def load_space(group: str, **overrides):
     return load_concept_space(paths["model"], paths["clustering"], paths["processing"], **settings)
 
 
+@contextlib.contextmanager
+def preserved_rng():
+    """Leave the global random streams exactly as they were found.
+
+    The explainer builds a data loader on every call, and a data loader draws its base seed from the global torch
+    generator, so merely *asking* the explainer moves the stream of whatever samples afterwards. A check that guards a
+    run must not change that run.
+    """
+    torch_state, numpy_state, python_state = torch.get_rng_state(), np.random.get_state(), random.getstate()
+    try:
+        yield
+    finally:
+        torch.set_rng_state(torch_state)
+        np.random.set_state(numpy_state)
+        random.setstate(python_state)
+
+
 def reference_check(space, group: str, n: int = 64, tolerance: float = 1e-5,
-                    reference: t.Optional[str] = None, pool: t.Optional[str] = None) -> float:
+                    reference: t.Optional[str] = None, pool: t.Optional[str] = None,
+                    property_kind: t.Optional[str] = None, property_tolerance: float = 1e-4) -> float:
     """Recompute the memberships of ``n`` evenly spread rows of the group's reference table, return the largest deviation.
 
     Raises ``AssertionError`` if the concept order differs from the table's or the deviation exceeds ``tolerance``
     (the bound the research gated on before every steered run). ``reference`` and ``pool`` name other files than the
-    zoo's, for an experiment that was pointed at a bundle of its own.
+    zoo's, for an experiment that was pointed at a bundle of its own. The global random streams are left as they were.
+
+    With ``property_kind`` (``"class_probability"`` or ``"regression"``, see ``evaluate.property_readout``) and a ``pred``
+    array in the reference, the explainer's predicted property must reproduce it within ``property_tolerance`` as well:
+    an energy that asks the explainer for the property needs that to be right, too. The return value is the largest of
+    the two deviations.
     """
+    with preserved_rng():
+        return _reference_check(space, group, n, tolerance, reference, pool, property_kind, property_tolerance)
+
+
+def _reference_check(space, group, n, tolerance, reference, pool, property_kind, property_tolerance) -> float:
     paths = bundle_paths(group)
     reference = np.load(reference or paths["reference"], allow_pickle=False)
     assert list(space.concept_ids) == [str(c) for c in reference["concept_ids"]], "the concept order differs"
@@ -81,4 +112,10 @@ def reference_check(space, group: str, n: int = 64, tolerance: float = 1e-5,
         computed = space.phi_from_graphs([pyg_to_vgd(graphs[i]) for i in rows])
     deviation = float(np.abs(computed - reference["phi"][rows]).max())
     assert deviation <= tolerance, f"{group}: the explainer deviates from the reference table by {deviation:.3e}"
+    if property_kind is not None and "pred" in reference.files and "smiles" in reference.files:
+        from defog_megan.evaluate import property_readout
+        predicted = np.asarray(property_readout(property_kind)(space, [str(reference["smiles"][i]) for i in rows], 256))
+        gap = float(np.abs(predicted - reference["pred"][rows]).max())
+        assert gap <= property_tolerance, f"{group}: the predicted property deviates from the reference by {gap:.3e}"
+        deviation = max(deviation, gap)
     return deviation

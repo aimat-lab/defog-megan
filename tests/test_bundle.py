@@ -71,3 +71,74 @@ def test_the_explainer_reproduces_the_reference_memberships(explainer_stack, gro
     deviation = reference_check(space, group, n=32)
     assert deviation <= 1e-5
     assert space.num_concepts == {"colorgraphs": 19, "zinc-logp": 42, "ames": 29}[group]
+
+
+# -- the gate must not move the run it guards ---------------------------------------------------------------------------
+
+def test_the_reference_check_leaves_the_random_streams_untouched(tmp_path):
+    """The explainer draws from the global torch generator (it builds a data loader per call). A check that runs before a
+    sampling run must not shift that run's random numbers: found when the FK arms of a ported experiment stopped being
+    bit-identical to the research code's, because the new gate called the explainer once before sampling."""
+    import random
+
+    import torch
+
+    from defog_megan.bundle import preserved_rng, reference_check
+    from defog_megan.colorgraphs import RB_PALETTE, save_pool_npz, vgd_to_pyg
+
+    graphs = [vgd_to_pyg({"node_attributes": [list(RB_PALETTE[i % 7]) for i in range(3 + k)],
+                          "edge_indices": [[i, i + 1] for i in range(2 + k)] + [[i + 1, i] for i in range(2 + k)],
+                          "edge_attributes": [[1.0]] * (4 + 2 * k)}) for k in range(3)]
+    pool = tmp_path / "pool.npz"
+    save_pool_npz(str(pool), graphs, [{} for _ in graphs])
+    phi = np.array([[0.1, 0.9], [0.5, 0.5], [1.0, 0.0]])
+    reference = tmp_path / "reference.npz"
+    np.savez(reference, concept_ids=np.array(["a", "b"]), phi=phi)
+
+    class Space:                                     # an explainer that, like the real one, consumes the global generator
+        concept_ids = ["a", "b"]
+
+        def phi_from_graphs(self, graphs, batch_size=512):
+            torch.rand(1)
+            np.random.rand()
+            random.random()
+            return phi[: len(graphs)]
+
+    torch.manual_seed(1), np.random.seed(1), random.seed(1)
+    before = (torch.get_rng_state().clone(), np.random.get_state()[1].copy(), random.getstate())
+    deviation = reference_check(Space(), "colorgraphs", n=3, reference=str(reference), pool=str(pool))
+    after = (torch.get_rng_state(), np.random.get_state()[1], random.getstate())
+    assert deviation == 0.0
+    assert torch.equal(before[0], after[0]) and np.array_equal(before[1], after[1]) and before[2] == after[2]
+
+    with preserved_rng():                            # and the helper itself, on a stream that is moved inside it
+        torch.rand(5)
+    assert torch.equal(torch.get_rng_state(), after[0])
+
+
+def test_the_reference_check_also_gates_the_predicted_property(tmp_path, monkeypatch):
+    """The Ames energy asks the explainer for the property, so the gate checks the prediction as well as the memberships."""
+    from defog_megan import evaluate
+    from defog_megan.bundle import reference_check
+
+    smiles = ["CCO", "c1ccccc1", "CC(=O)O", "CCN"]
+    phi = np.array([[0.1, 0.9], [0.5, 0.5], [1.0, 0.0], [0.3, 0.7]])
+    pred = np.array([0.1, 0.8, 0.3, 0.6])
+    reference = tmp_path / "reference.npz"
+    np.savez(reference, concept_ids=np.array(["a", "b"]), smiles=np.array(smiles), phi=phi, pred=pred)
+
+    class Space:
+        concept_ids = ["a", "b"]
+
+        def phi(self, batch, batch_size=512):
+            return np.array([phi[smiles.index(s)] for s in batch])
+
+    served = {"offset": 0.0}
+    monkeypatch.setattr(evaluate, "property_readout",
+                        lambda kind: (lambda space, batch, batch_size: np.array([pred[smiles.index(s)] + served["offset"] for s in batch])))
+    assert reference_check(Space(), "ames", n=4, reference=str(reference), property_kind="class_probability") == 0.0
+    # without the property kind the prediction is not looked at
+    served["offset"] = 0.5
+    assert reference_check(Space(), "ames", n=4, reference=str(reference)) == 0.0
+    with pytest.raises(AssertionError, match="predicted property"):
+        reference_check(Space(), "ames", n=4, reference=str(reference), property_kind="class_probability")
