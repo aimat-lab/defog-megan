@@ -1,0 +1,153 @@
+{
+ "format": 1,
+ "source": "result folders of the research code (see tests/parity/README.md)",
+ "environment": {
+  "torch": "2.5.0+cu124",
+  "python": "3.10.15",
+  "threads": 1,
+  "device": "cpu"
+ },
+ "cases": {
+  "ames/fk": {
+   "experiment": "sample_ames_joint",
+   "arguments": [
+    "--__TESTING__",
+    "True",
+    "--STAGE",
+    "'fk'"
+   ],
+   "files": {
+    "gen_fk_only_ch1_cl8_lv+0.0.json": "ab71d33f75aace8b07002a3c1e9efb83b6f4fa65051fffd975a472e85dea526f",
+    "gen_fk_only_ch1_cl8_lv+1.0.json": "431fd405b072c39826071035c61d6497151a8304024dd638a4f13bd9c5170694",
+    "gen_joint_fk_ch1_cl8_lv+0.0_wc1_wp1.json": "faea6fd435c8d16f4bc0e23a39d31d0489ca4ac50f4e4cc0051eb7ded1d83539",
+    "gen_joint_fk_ch1_cl8_lv+1.0_wc1_wp1.json": "9b0bcd441da6eb44e385daa38cd47359d7467a752123991514a60b6efadeed65"
+   },
+   "energy_calls": {
+    "joint_fk_ch1_cl8_lv+0.0_wc1_wp1": 6,
+    "fk_only_ch1_cl8_lv+0.0": 6,
+    "joint_fk_ch1_cl8_lv+1.0_wc1_wp1": 6,
+    "fk_only_ch1_cl8_lv+1.0": 6
+   }
+  },
+  "ames/probe": {
+   "experiment": "sample_ames_joint",
+   "arguments": [
+    "--__TESTING__",
+    "True",
+    "--STAGE",
+    "'probe'"
+   ],
+   "files": {
+    "gen_joint_ch1_cl8_lv+0.0_wc1_wp1.json": "b84855a709810d8faf86982ecb927c67efc7052c69b41e646d7b744e89f98a81",
+    "gen_joint_ch1_cl8_lv+1.0_wc1_wp1.json": "03c383f130cf3dc8357f2825791adbca49500ed84d6ec484d26a70269ba38fa7"
+   },
+   "energy_calls": {}
+  },
+  "ames/single": {
+   "experiment": "sample_ames_joint",
+   "arguments": [
+    "--__TESTING__",
+    "True",
+    "--STAGE",
+    "'single'"
+   ],
+   "files": {
+    "gen_concept_ch1_cl8_w1.json": "e99e723601de83e751504fddfb132744522779f43a24723645bd5461deee9ec4",
+    "gen_property_w1.5_lv+0.0.json": "4619a09d2fc2e350107d39207a801a0f1dba8aadfbced0153a1b376d273e10be",
+    "gen_property_w1.5_lv+1.0.json": "18a5a6b34d41b9a6408d6c1685442ba9795cf5421a403213938efd5a972bfa0a",
+    "gen_uncond.json": "e152ececa4e87ab6cbce0e199b740ea1867fad8fc5f9512554a2feab5907df3b"
+   },
+   "energy_calls": {}
+  },
+  "colorgraphs/fk": {
+   "experiment": "sample_color_joint",
+   "arguments": [
+    "--__TESTING__",
+    "True",
+    "--STAGE",
+    "'fk'"
+   ],
+   "files": {
+    "gen_fk_only_ch0_cl3_lv-1.npz": "b6ecabb2fdce3de4794d41fedd97668e64ddfd55faf4e6f721b0b55a56a28456",
+    "gen_fk_only_ch0_cl3_lv-3.npz": "c1480fb127664305a93cd527f975809be35f940f87768b96975a58259a27e54b",
+    "gen_joint_fk_ch0_cl3_lv-1_wc1_wp2.npz": "89e1144cabc793e3bb4e6b6c7f023159666bbcb0788a8e79fa7b59d9c00af15c",
+    "gen_joint_fk_ch0_cl3_lv-3_wc1_wp2.npz": "9eef1dbc411c9a55c7523f85e44b89c4abbeeb54dfaf8d4b89f45a49b8a667fc"
+   },
+   "energy_calls": {
+    "joint_fk_ch0_cl3_lv-3_wc1_wp2": 6,
+    "fk_only_ch0_cl3_lv-3": 6,
+    "joint_fk_ch0_cl3_lv-1_wc1_wp2": 6,
+    "fk_only_ch0_cl3_lv-1": 6
+   }
+  },
+  "colorgraphs/probe": {
+   "experiment": "sample_color_joint",
+   "arguments": [
+    "--__TESTING__",
+    "True",
+    "--STAGE",
+    "'probe'"
+   ],
+   "files": {
+    "gen_concept_ch0_cl3.npz": "a57986d0f0d733f85afc1402a25918a097e8baef8471f41af15b538dd21d4c33",
+    "gen_joint_ch0_cl3_lv-1_wc1_wp2.npz": "f61860c8154cdcdbe7d5bd4d6bba8b64e932afbdf1a0665fa867a91f0d6b43b7",
+    "gen_joint_ch0_cl3_lv-3_wc1_wp2.npz": "5314d01564102c532cad76792657653485cd906bf3591a49f9bbbbe79293abcf",
+    "gen_property_lv-1.npz": "0ffe5600c1db8b8aedd89f688be4a91297c1eed0cbce7a8b64cb84c71c45509b",
+    "gen_property_lv-3.npz": "e5179a787b82eab33ec45493e7f27e5dc8cea87a6e0cc058b3a5e5d4341fe476",
+    "gen_uncond.npz": "190400b2dc68fbba54acd5314f3c017a1f1fc2ee597661e613303e7d46a31ba0"
+   },
+   "energy_calls": {}
+  },
+  "zinc-logp/fk": {
+   "experiment": "sample_mol_joint",
+   "arguments": [
+    "--__TESTING__",
+    "True",
+    "--STAGE",
+    "'fk'"
+   ],
+   "files": {
+    "gen_fk_only_ch0_cl6_lv+0.5.json": "7e0b7528e6b8075765c0e837d91a41828c57881193537d0715bf19989a5d52da",
+    "gen_fk_only_ch0_cl6_lv+1.5.json": "bf9dc21e03cb451dd2b576c899434febccef5b7f08a09eafbec63a13512b9a7a",
+    "gen_joint_fk_ch0_cl6_lv+0.5_wc1_wp1.json": "34bdcb2c984113bccb3b578313beeb0fe5b802ab85136b520f965f197afe9693",
+    "gen_joint_fk_ch0_cl6_lv+1.5_wc1_wp1.json": "ad1c1a58efd2b9d9e13d713be74c85dc0fc90a5efeb7a24bc8e454a287fb7601"
+   },
+   "energy_calls": {
+    "joint_fk_ch0_cl6_lv+0.5_wc1_wp1": 6,
+    "fk_only_ch0_cl6_lv+0.5": 6,
+    "joint_fk_ch0_cl6_lv+1.5_wc1_wp1": 6,
+    "fk_only_ch0_cl6_lv+1.5": 6
+   }
+  },
+  "zinc-logp/probe": {
+   "experiment": "sample_mol_joint",
+   "arguments": [
+    "--__TESTING__",
+    "True",
+    "--STAGE",
+    "'probe'"
+   ],
+   "files": {
+    "gen_joint_ch0_cl6_lv+0.5_wc1_wp1.json": "e338a429b2693f4b75a97c4cd9f0c8c5bf8064190c8297735fadce39b782be55",
+    "gen_joint_ch0_cl6_lv+1.5_wc1_wp1.json": "aa1f3d907b37f8f5f8a259ec55edd8a3080de57a70a69bbcd9b51392a9abf8ac"
+   },
+   "energy_calls": {}
+  },
+  "zinc-logp/single": {
+   "experiment": "sample_mol_joint",
+   "arguments": [
+    "--__TESTING__",
+    "True",
+    "--STAGE",
+    "'single'"
+   ],
+   "files": {
+    "gen_concept_ch0_cl6_w1.json": "7f40848c248c367acfd882a235200040cc0e7f56f85d5b395189b0d0bd3d00f6",
+    "gen_property_w1_lv+0.5.json": "ba7685b6fa1d209dec50342d27f3dbd5e1c540eb9d41ac7492215ffa258a0de0",
+    "gen_property_w1_lv+1.5.json": "0c731d196d28d8f56bf0c356c195aafe633119d335cc63a879337bed8c984bc0",
+    "gen_uncond.json": "807ffbbcdf1d46b08ed73f8bbf9989b1d6ac99fecf4f1133800a76a5b9a00853"
+   },
+   "energy_calls": {}
+  }
+ }
+}

@@ -71,6 +71,9 @@ packages = ["src/defog_megan"]
 [tool.hatch.build.targets.sdist]
 include = [
     "/src",
+    "/experiments",
+    "/scripts",
+    "/reproduce",
     "/tests",
     "/docs",
     "/README.md",
@@ -85,5 +88,5 @@ include = [
 testpaths = ["tests"]
 addopts = "-m 'not parity'"
 markers = [
-    "parity: opt-in; needs the model zoo (DEFOG_MEGAN_ZOO) and the golden outputs of the research stack",
+    "parity: opt-in; needs the model zoo (DEFOG_MEGAN_ZOO), the torch build of the golden files and a long run",
 ]

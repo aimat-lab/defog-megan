@@ -182,7 +182,7 @@ def predict_class_probability(space, smiles: t.Sequence[str], batch_size: int = 
 
 
 def property_readout(kind: str):
-    """The per-molecule property function of a rung: ``"regression"`` (MEGAN's predicted value, logS) or
+    """The per-molecule property function of a rung: ``"regression"`` (MEGAN's predicted value) or
     ``"class_probability"`` (MEGAN's probability of the positive class, mutagenicity)."""
     if kind == "regression":
         return predict_property

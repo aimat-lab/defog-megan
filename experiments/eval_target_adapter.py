@@ -57,6 +57,11 @@ BASE_CKPT: str = zoo_path("colorgraphs", "base.ckpt")
 #     optional). The default is the cross-attention adapter of Table 1; pass the FiLM-only adapter of
 #     the zoo (property_adapter_film_only.ckpt) for the control arm.
 ADAPTER_CKPT: str = zoo_path("colorgraphs", "property_adapter.ckpt")
+# :param EXPECT_XATTN:
+#     1 = the reloaded adapter must HAVE cross-attention (the Table 1 adapter), 0 = it must NOT (the FiLM-only control row),
+#     -1 = not checked. A FiLM/cross-attention mix-up is a silent wrong answer, not a crash: the run would finish and fill
+#     the wrong table row.
+EXPECT_XATTN: int = -1
 
 # :param GUIDANCE_WEIGHTS:
 #     The two weights the paper's main table reports: w=1.0 and w=2.0 (the weight the
@@ -101,7 +106,8 @@ TRAIN_SPLIT: float = 0.9
 REFERENCE_SIZE: int = 5000
 SEED: int = 42
 
-__DEBUG__: bool = True
+# False: every run gets its own time-stamped folder (True writes to one `debug/` folder, which the next run wipes).
+__DEBUG__: bool = False
 __TESTING__: bool = False
 
 
@@ -174,6 +180,9 @@ def experiment(e: Experiment) -> None:
         raise ValueError(f"base has {base.num_node_classes} node classes, "
                          f"palette has {len(RB_PALETTE)} -- wrong base")
     adapter = CrossAttentionAdapter.load(e.ADAPTER_CKPT, device="cpu").to(device).eval()
+    if e.EXPECT_XATTN in (0, 1) and int(getattr(adapter, "xattn_tokens", 0) > 0) != e.EXPECT_XATTN:
+        raise ValueError(f"EXPECT_XATTN={e.EXPECT_XATTN}, but the adapter has xattn_tokens="
+                         f"{getattr(adapter, 'xattn_tokens', 0)} -- wrong adapter file for this table row")
     e.log(f"base {sum(p.numel() for p in base.parameters()):,} params (frozen) | "
           f"adapter {sum(p.numel() for p in adapter.parameters()):,} params")
     if adapter.cond_dim != 1:

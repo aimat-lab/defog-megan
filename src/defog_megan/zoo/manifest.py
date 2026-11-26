@@ -91,6 +91,15 @@ class Manifest:
         self._titles: Dict[str, str] = {}
         self._requires: Dict[str, List[str]] = {}
         self._files: List[ZooFile] = []
+        #: group -> {"file", "bytes", "sha256"} of the archive that holds the group's core and optional files (see archive.py)
+        self.archives: Dict[str, dict] = {}
+        #: where the archives are served from, e.g. the assets of a release; may be overridden when fetching
+        self.base_url: Optional[str] = (data.get("download") or {}).get("base_url")
+        for group, entry in (data.get("archives") or {}).items():
+            if not _SHA256.match(str(entry.get("sha256", ""))) or not isinstance(entry.get("bytes"), int):
+                raise ManifestError(f"archive of {group}: needs 'bytes' (int) and 'sha256' (64 hex digits)")
+            _check_path(entry.get("file", ""), f"archive of {group}")
+            self.archives[group] = dict(entry)
         seen_ids, seen_paths = set(), set()
         for group, body in data.get("groups", {}).items():
             self._titles[group] = body.get("title", group)

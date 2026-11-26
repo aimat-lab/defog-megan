@@ -31,12 +31,35 @@ resampling. The two tiers differ only in the loop length and the batch:
 | `quick` | 10 to 20 | 8 | a few minutes |
 | `paper` | 500 | 16 | about two hours per stack, on one CPU core |
 
-## Not covered yet
+## Experiment-level parity
 
-- The explainer: membership vectors and the explainer-backed Feynman-Kac energy of the paper. They need the explainer's
-  numerics fixed on both sides; the membership reference table in the zoo is the golden for the vectors themselves.
-- The molecular groups (the base, the logP and Ames adapters, the charge-aware vocabulary) and the inpainting arm.
-- The statistical results of the paper (hit rates over cells).
+The cases above test the generator side with a stand-in energy. The whole experiments, with the explainer as the Feynman-Kac
+energy and the molecule codecs, are checked by running them in the tiny testing mode (a few graphs, 20 steps) next to the
+research code:
+
+| file | what |
+|---|---|
+| `experiment_parity.py` | runs an experiment as the research code and as this repository, in one environment, one thread, identical arguments, and compares every generated array and SMILES list and the manifest; `--control old` or `--control new` runs one side twice, which shows how deterministic it is on its own |
+| `cases_experiments.py` | the eight cases: the colored joint sampler (probe, fk), the logP sampler (single, probe, fk), the Ames sampler (single, probe, fk) |
+| `digests.py` | the digests of what an experiment generated |
+| `make_experiment_golden.py` | turns the result folders of the research side into `golden/experiments.json` |
+| `test_experiment_golden.py` | the opt-in gate (`-m parity`): each experiment reproduces the research code's digests and its number of explainer calls |
+| `test_experiment_golden_file.py` | structure tests of the golden file and of the digests, in the ordinary suite |
+
+Regenerate (needs the research code, checked out at the revision of the paper's runs, and its environment):
+
+```bash
+python tests/parity/experiment_parity.py sample_ames_joint ... --keep <folder>      # identical? then <folder>/old is the golden
+python tests/parity/make_experiment_golden.py --case ames/fk=<folder>/old ...
+```
+
+## Not covered
+
+- The training experiments (the base, the adapters) are smoke-run and their architectures match the paper's checkpoints (parameter
+  counts), but they are not retrained and compared: that takes hours to days and is not bit-exact on a GPU.
+- Runs on a GPU, and the statistical results of the paper (hit rates over cells), which are compared with a looser check; the
+  scorers are checked on the paper's own raw samples instead.
+- The experiments of the appendices.
 
 ## Regenerate a tier (research stack)
 

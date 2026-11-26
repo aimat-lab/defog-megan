@@ -5,10 +5,10 @@ The manuscript's second experiment. Experiment 1 showed each adapter reaching it
 condition alone; this asks for BOTH at once -- a requested concept c AND a requested exact
 motif sum y* -- which is the paper's central claim on the one rung with exact ground truth.
 
-WHY THE CELLS ARE (concept, absolute level) AND NOT OFFSETS. On the molecular rung logS
-targets were offsets from each concept's native mean because those means spanned seven
-log units. Here the property is an integer in [-3, +3] and the pool is flat over it
-(14,285 graphs per level), so an absolute grid is comparable across concepts as it is.
+WHY THE CELLS ARE (concept, absolute level) AND NOT OFFSETS. Offsets from each concept's native mean
+are the alternative when the native means of the concepts are far apart. Here the property is an
+integer in [-3, +3] and the pool is flat over it (14,285 graphs per level), so an absolute grid is
+comparable across concepts as it is.
 Whether a cell is native, off-native or unsupported is then a property of the POOL, which
 the scorer reads off it rather than this module asserting it:
 
@@ -169,7 +169,8 @@ TIME_DISTORTION: str = "polydec"
 SHARD: int = 0
 NUM_SHARDS: int = 1
 SEED: int = 42
-__DEBUG__: bool = True
+# False: every run gets its own time-stamped folder (True writes to one `debug/` folder, which the next run wipes).
+__DEBUG__: bool = False
 __TESTING__: bool = False
 
 

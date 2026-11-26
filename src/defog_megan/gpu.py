@@ -1,7 +1,7 @@
 """
-GPU sizing helpers shared by the cluster training experiments.
+GPU sizing helpers shared by the training experiments.
 
-Imports nothing MEGAN-derived, so it is safe on the cluster side of the split.
+Imports nothing MEGAN-derived, so it does not need the explainer stack.
 """
 
 from __future__ import annotations

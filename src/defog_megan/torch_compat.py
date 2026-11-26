@@ -2,9 +2,9 @@
 
 PyTorch 2.6 flipped ``torch.load``'s ``weights_only`` default to ``True``. MEGAN's
 checkpoints predate that and store their hyperparameters in
-``lightning_fabric.utilities.data.AttributeDict``, so on the cluster's torch 2.13 the load
-raises ``UnpicklingError`` before any MEGAN code runs. The workstation's torch 2.5 still
-defaults to ``False``, which is why this appears only on the cluster.
+``lightning_fabric.utilities.data.AttributeDict``, so on torch 2.6 and later the load
+raises ``UnpicklingError`` before any MEGAN code runs. Torch 2.5, the build of the paper's
+runs, still defaults to ``False``, which is why this appears only on a newer one.
 
 **Why the obvious fix does not work.** ``torch.serialization.add_safe_globals`` is the
 sanctioned mechanism and it is not enough here: the restricted unpickler refuses
@@ -13,8 +13,8 @@ sanctioned mechanism and it is not enough here: the restricted unpickler refuses
 ``AttributeDict`` is a dict subclass. Allowlisting it changes nothing.
 
 **Why not pass the flag through.** ``ConceptSpace.from_paths`` loads via upstream's
-``Megan.load``, which exposes no ``weights_only`` argument, and the three MEGAN repos are
-read-only for this project.
+``Megan.load``, which exposes no ``weights_only`` argument, and the MEGAN releases are
+not ours to change.
 
 So this restores the old default *only for the duration of the MEGAN load* and puts it
 back afterwards. The scope is the point: a module-level monkeypatch would silently disable

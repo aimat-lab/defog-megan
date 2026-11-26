@@ -134,7 +134,8 @@ REFERENCE_SIZE: int = 5000
 
 SEED: int = 42
 
-__DEBUG__: bool = True
+# False: every run gets its own time-stamped folder (True writes to one `debug/` folder, which the next run wipes).
+__DEBUG__: bool = False
 __TESTING__: bool = False
 
 

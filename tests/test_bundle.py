@@ -142,3 +142,16 @@ def test_the_reference_check_also_gates_the_predicted_property(tmp_path, monkeyp
     assert reference_check(Space(), "ames", n=4, reference=str(reference)) == 0.0
     with pytest.raises(AssertionError, match="predicted property"):
         reference_check(Space(), "ames", n=4, reference=str(reference), property_kind="class_probability")
+
+
+@pytest.mark.parametrize("group, kind", [("zinc-logp", None), ("ames", "class_probability")])
+def test_the_explainer_reproduces_the_public_reference_table(explainer_stack, group, kind):
+    """The molecular groups ship a small table of well-known molecules (the paper's own tables hold dataset molecules and are
+    withheld). Its memberships, and for Ames the predicted class probabilities, are what a copy of the explainer stack has to
+    reproduce."""
+    reference = zoo_root() / group / "data" / "reference_check.npz"
+    if not reference.is_file() or not _zoo_has(group, "model", "clustering", "processing", "table"):
+        pytest.skip(f"the zoo (or its public reference table) is not available for {group}")
+    from defog_megan.bundle import load_space, reference_check
+    space = load_space(group)
+    assert reference_check(space, group, n=100, reference=str(reference), property_kind=kind) <= 1e-4

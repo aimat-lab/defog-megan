@@ -66,6 +66,11 @@ EVAL_CHUNK: int = 32
 REFERENCE_SIZE: int = 5000
 TRAIN_SPLIT: float = 0.9
 
+# :param SHARD / NUM_SHARDS: the concepts are dealt out to the shards in turn (shard k takes every NUM_SHARDS-th concept
+#       from k), so that the vocabulary can be sampled on several GPUs. Only shard 0 draws the full unconditional baseline the
+#       per-concept rates are read against; the others draw a token baseline of 8 graphs. Each shard seeds with SEED + SHARD.
+SHARD: int = 0
+NUM_SHARDS: int = 1
 SEED: int = 42
 __DEBUG__: bool = False
 __TESTING__: bool = False
@@ -80,9 +85,9 @@ def experiment(e: Experiment) -> None:
         e.EVAL_STEPS = 20
         e.REFERENCE_SIZE = 200
 
-    torch.manual_seed(e.SEED)
+    torch.manual_seed(e.SEED + e.SHARD)
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    e.log(f"device: {device}")
+    e.log(f"device: {device} | shard {e.SHARD}/{e.NUM_SHARDS}")
 
     phi, concept_ids = load_concept_conditions(e.CONDITIONS_PATH)
     concept_ids = list(concept_ids)
@@ -92,7 +97,7 @@ def experiment(e: Experiment) -> None:
                          "the adapter would be steered with a permuted vector")
     support = (np.asarray(phi) < 0.999).sum(axis=0)
 
-    concepts = list(e.CONCEPTS) or concept_ids
+    concepts = (list(e.CONCEPTS) or concept_ids)[e.SHARD::e.NUM_SHARDS]
     if e.__TESTING__:
         concepts = concepts[:2]
     e.log(f"sampling {len(concepts)} of {len(concept_ids)} concepts, "
@@ -132,7 +137,7 @@ def experiment(e: Experiment) -> None:
     baseline_sampler = Sampler(base, eta=e.ETA, omega=e.OMEGA,
                                sample_steps=e.EVAL_STEPS,
                                time_distortion=e.TIME_DISTORTION)
-    baseline = sample_with(baseline_sampler, e.N_BASELINE)
+    baseline = sample_with(baseline_sampler, e.N_BASELINE if e.SHARD == 0 else min(8, e.N_BASELINE))
     baseline_report = structural_report(baseline, reference)
     baseline_score = distribution_score(baseline_report)
     save_pool_npz(os.path.join(e.path, "gen_baseline.npz"), baseline, [{}] * len(baseline))
@@ -140,6 +145,7 @@ def experiment(e: Experiment) -> None:
           f"connected={baseline_report['connected_rate']:.3f}")
 
     manifest = {
+        "stage": "concepts", "shard": e.SHARD, "num_shards": e.NUM_SHARDS,
         "source_adapter": e.ADAPTER_CKPT,
         "target_mode": e.TARGET_MODE,
         "guidance_weight": e.GUIDANCE_WEIGHT,

@@ -2,18 +2,36 @@
 
 ## 1.0.0 (unreleased)
 
-Pre-alpha: the repository skeleton and the model-zoo manifest. Nothing of the generation pipeline is ported yet.
+The code of the paper *Generating Graphs for a Reason: Explanation-Conditioned Adapters for Discrete Flow Matching*: the four
+experiments of the main text, their scorers, and the model zoo. Built on `defog-adapt` 0.1.0.
 
 ### Included
 
-- Packaging (`defog-megan`, import `defog_megan`), CI, the private-reference scan, the repository rules (`CLAUDE.md`).
-- `defog_megan.zoo`: the manifest of the paper's models and data files (sizes, sha256, what ships), and a verifier that
-  checks a local copy against it.
-- `docs/`: the architecture plan, the model zoo (contents, contracts, licences) and the parity plan.
-- `tests/parity/`: the golden outputs of the research stack for the colored-graph generator side (seven cases, two
-  tiers), the generator that makes them, structure tests of the golden file, and the opt-in gate. The gate was
-  checked against candidates broken on purpose.
+- `experiments/`: the colored-graph base, the property-adapter evaluation (with and without Feynman-Kac steering), the concept
+  tables and the concept-adapter sampling and training, the property-adapter and concept-adapter training of the molecular
+  settings, and the three joint samplers (`sample_color_joint`, `sample_mol_joint`, `sample_ames_joint`; stages `single`,
+  `probe`, `fk`, sharded over devices). The paper's settings are the defaults or are passed by `reproduce/`.
+- `scripts/`: the scorers of the colored arms, the concept arm, the colored joint rungs, the logP rung and the Ames rung; the
+  Ames data preparation; `collect_shards.py`; the learning-rate selection; the builder of the public reference tables.
+- `reproduce/`: one script per experiment with the seeds and sizes of the paper's runs, and the preparation of the molecule tables.
+- `src/defog_megan/`: the membership contract and explainer runtime, the bundle check, the synthetic domain and its exact
+  property, the molecule codec with a strict charge-aware reading (vocabulary of the Ames base), the four Feynman-Kac energies, the
+  evaluation helpers, and the zoo (manifest, verifier, archives, command line).
+- The model zoo: three groups, 563 MB of core files, each with a model card, and for the molecular groups a public reference
+  table that checks a copy of the explainer stack.
+- `tests/parity/`: the golden outputs of the research code, for the generator side (seven cases, two tiers) and for every
+  experiment (eight cases), with the tools that make them.
 
-### Planned
+### How it was checked
 
-See `docs/architecture.md` and `docs/parity.md`.
+Every ported experiment was run next to the research code in one environment with identical arguments, and the generated
+graphs and SMILES lists compared: identical for all three stages of the molecular settings and for the colored joint sampler. The
+scorers reproduce the paper's reports from the paper's own raw samples. The tables the molecular experiments need are rebuilt
+from the public data and agree with the paper's (Ames: byte for byte; ZINC: see `docs/zoo.md`). `docs/parity.md` has the
+details, including two findings along the way: the explainer check ahead of a sampling run moved the random stream of the run, and
+the resampling scheme recorded in the archived Feynman-Kac runs (`residual`) was not the one in effect (`multinomial`).
+
+### Not included
+
+The experiments of the appendices (end-to-end baselines, prototype size sweep, inpainting, per-cell tables, figures), which come
+in a later release; the nitrenium study, which is a separate project.

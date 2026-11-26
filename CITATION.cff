@@ -1,6 +1,6 @@
 cff-version: 1.2.0
-message: "If you use defog-megan, please cite it, and cite the DeFoG paper it builds on."
-title: "defog-megan"
+message: "If you use defog-megan, please cite it (the paper reference is added here when it is public), and cite the DeFoG paper it builds on."
+title: "defog-megan: code and models of Generating Graphs for a Reason"
 type: software
 authors:
   - family-names: Teufel

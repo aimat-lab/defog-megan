@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "generated": "2026-11-18",
+ "generated": "2026-11-26",
  "groups": {
   "colorgraphs": {
    "title": "Synthetic colored graphs",
@@ -157,6 +157,16 @@
      "sha256": "adb8e0835b8dbb33a925b40f733e5c55d1e25c56d7c21a4c3838b0d1ec3b6bcf",
      "in_hand": true,
      "note": "Concept list and the scoring settings the memberships were computed with."
+    },
+    {
+     "id": "C16",
+     "path": "MODEL_CARD.md",
+     "kind": "model_card",
+     "ship": "core",
+     "bytes": 3660,
+     "sha256": "e1bd88f5165c8108611b7092025815d1c9041f4f45b0d70a9d709eb6bab1ef72",
+     "in_hand": true,
+     "note": "What the group contains, the settings of the paper's runs and the things to know."
     }
    ]
   },
@@ -182,10 +192,10 @@
      "path": "base.schema.json",
      "kind": "schema",
      "ship": "core",
-     "bytes": 440,
-     "sha256": "449dba3d0a9a2ecc4742a9b8a019d37626193faf8b399cc12a3b555c25b7b493",
+     "bytes": 432,
+     "sha256": "cd697c124fef3b1c3b10abbc2c8d9b88b61f797cf81590c89ec7f299179f8080",
      "in_hand": true,
-     "note": "Vocabulary and size range of the base."
+     "note": "Vocabulary and size range of the base. The package name of the original record is reduced to the model name."
     },
     {
      "id": "L3",
@@ -316,6 +326,26 @@
      "sha256": "28f0f45d6e5aafaac8aa9af884a6d6b468e17bfd9d9f82ed461791869acc8d58",
      "in_hand": true,
      "note": "logP column of the table above; withheld with it."
+    },
+    {
+     "id": "L13",
+     "path": "data/reference_check.npz",
+     "kind": "reference",
+     "ship": "core",
+     "bytes": 2412,
+     "sha256": "36ce3e1b4705cdec49086c32cb023cb3d2ec088d387cb2dd6d282ddd119522a0",
+     "in_hand": true,
+     "note": "Fifty well-known molecules with the memberships the explainer computes for them; the public check of an explainer copy."
+    },
+    {
+     "id": "L14",
+     "path": "MODEL_CARD.md",
+     "kind": "model_card",
+     "ship": "core",
+     "bytes": 3687,
+     "sha256": "6a9cd37b471dc1accff3517616fa028505290a31971c4f2a99ffc9c67c55b6cf",
+     "in_hand": true,
+     "note": "What the group contains, the settings of the paper's runs and the things to know."
     }
    ]
   },
@@ -535,8 +565,48 @@
      "sha256": "8e4adba97e1112e87d5ca302e552a5c4192a393a2530cddd757de1a7f450721d",
      "in_hand": true,
      "note": "Train / held-out split of the label adapter; also lists target molecules with SMILES and labels, so it is withheld."
+    },
+    {
+     "id": "A17",
+     "path": "data/reference_check.npz",
+     "kind": "reference",
+     "ship": "core",
+     "bytes": 3112,
+     "sha256": "4f17d48c3735bffba0ee4e02905cfdc01583d4611e5859051eb8b57ccb338737",
+     "in_hand": true,
+     "note": "Sixty well-known molecules (ten charged) with the memberships and class probabilities the explainer computes for them; the public check of an explainer copy."
+    },
+    {
+     "id": "A18",
+     "path": "MODEL_CARD.md",
+     "kind": "model_card",
+     "ship": "core",
+     "bytes": 4414,
+     "sha256": "7daa9eb1aa1e1fa69a4413fc5fca4cc6bddc5f50e13534bee37276b09dbffc68",
+     "in_hand": true,
+     "note": "What the group contains, the settings of the paper's runs and the things to know."
     }
    ]
   }
+ },
+ "archives": {
+  "colorgraphs": {
+   "file": "defog-megan-zoo-colorgraphs-1.0.0.tar",
+   "bytes": 299315200,
+   "sha256": "77d0066a69790da5049702b053e3c9f47d20a9bba992df9796892485b6826702"
+  },
+  "zinc-logp": {
+   "file": "defog-megan-zoo-zinc-logp-1.0.0.tar",
+   "bytes": 183633920,
+   "sha256": "4ea1b7dbc04fe5de2ccf531c88eee5f9639557a2e209654a934708e1fbf2baed"
+  },
+  "ames": {
+   "file": "defog-megan-zoo-ames-1.0.0.tar",
+   "bytes": 160399360,
+   "sha256": "330012c884f04e6fbbbd8f467cd23db9070f0cc215e43736edb3f273e8122f95"
+  }
+ },
+ "download": {
+  "base_url": "https://github.com/aimat-lab/defog-megan/releases/download/v1.0.0"
  }
 }

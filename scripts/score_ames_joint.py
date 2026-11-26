@@ -93,7 +93,7 @@ def read_unit(u, space):
 
 
 def grade(r, ci, level, train=frozenset()):
-    """Metrics of one readout against one cell (concept column ``ci``, logS ``level``; the property is MEGAN's prediction)."""
+    """Metrics of one readout against one cell (concept column ``ci``, requested ``level``; the property is MEGAN's prediction)."""
     n, valid = len(r["valid"]), r["valid"]
     miss = np.abs(r["logp"] - level)
     conc = valid & (r["phi"][:, ci] < CORE)
@@ -333,7 +333,7 @@ def main():
             print(f"property adapter {w}: " + "  ".join(
                 f"{lv}: MAE {v['mae']:.2f} m{TOLS[0]:g} {v['match_0.5']:.2f}" for lv, v in per.items()))
         for w, d in disp.items():
-            print(f"concept adapter {w}: mean |{'logS' if PROPERTY_KIND == 'regression' else 'P(mutagenic)'} shift vs pool| {d['mean_abs_property_shift']:.3f}, "
+            print(f"concept adapter {w}: mean |{'property' if PROPERTY_KIND == 'regression' else 'P(mutagenic)'} shift vs pool| {d['mean_abs_property_shift']:.3f}, "
                   f"own-channel direction {d['own_channel_direction']}/{d['n_concepts']}")
         for w, d in pdisp.items():
             print(f"property adapter {w}: mean |concept-rate shift vs pool| {d['mean_abs_concept_shift']:.4f}")

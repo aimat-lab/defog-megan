@@ -291,11 +291,10 @@ def save_pool_npz(path: str, graphs: t.Sequence[Data], metadata: t.Sequence[dict
                   palette: t.Sequence[t.Sequence[float]] = RB_PALETTE) -> None:
     """Serialize an encoded pool as flat arrays.
 
-    Deliberately **not** ``torch.save`` of the ``Data`` objects. The pool is
-    built on the workstation (torch 2.5 / PyG 2.5) and consumed on the cluster
-    (torch 2.13 / PyG 2.8); pickled PyG objects are a class-definition contract
-    across that gap, and a 24-hour job is a bad place to discover it broke.
-    Integers and offsets survive any version.
+    Deliberately **not** ``torch.save`` of the ``Data`` objects. A pool is built on
+    one machine and read on another, with another torch and PyG; pickled PyG objects
+    are a class-definition contract across that gap, and a long job is a bad place to
+    discover it broke. Integers and offsets survive any version.
 
     Node classes ride as ``int8`` and edges as ``int32`` undirected pairs, which
     also makes the file ~7x smaller than the one-hot form it rebuilds into.
@@ -426,14 +425,11 @@ def load_concept_conditions(path: str, pool_path: t.Optional[str] = None
         ``i`` of the pool you are loading, which would train on scrambled
         conditions with no error anywhere else in the pipeline.
 
-        Compared by **basename**, not full absolute path. This table is built on
-        the workstation and read on the cluster -- two different machines, two
-        different mount roots for what is the same logical pool file -- so an
-        ``os.path.abspath`` comparison fails on every cross-machine load. The
-        first real run of this table did exactly that: it failed fast in a
-        30-second preflight rather than mid-training, but it is a false positive
-        that basename comparison does not have. What this still catches is the
-        thing worth catching -- ``rb_dual_motifs_v2_pool.npz`` vs some other
+        Compared by **basename**, not full absolute path. A table is built on one
+        machine and read on another, with different mount roots for what is the
+        same logical pool file, so an ``os.path.abspath`` comparison fails on every
+        cross-machine load, a false positive that basename comparison does not
+        have. What this still catches is the thing worth catching -- ``pool.npz`` vs some other
         pool's name entirely.
     :returns: ``(phi, concept_ids)``.
     """
