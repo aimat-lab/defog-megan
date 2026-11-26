@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- README: a banner (`docs/assets/banner/`, a recording of the sampler, with the scripts that made it), a results chart of the
+- README: a banner (`docs/assets/banner/`, an animation of what a concept is above a recording of the sampler, with the
+  scripts that made it), a results chart of the
   paper's two joint experiments (`docs/assets/results.json` and `results.py`), a tested quickstart (`examples/quickstart.py`),
   and the sections reordered after those of `defog-adapt`. The content of the old README is kept.
 

@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="docs/assets/banner/banner.gif" alt="defog-megan: generating graphs for a reason" width="100%">
+  <img src="docs/assets/banner/banner.gif" alt="defog-megan: generating graphs for a reason. Explanations of molecules form concepts, and a frozen generator is asked for a property and for a concept." width="100%">
 </h1>
 
 <p align="center">
@@ -15,10 +15,12 @@ flow-matching generator is steered by two small adapters, one for a **property**
 ([MEGAN](https://github.com/aimat-lab/graph_attention_student)). The adapters compose at sampling time, and Feynman-Kac
 particle steering can use the explainer itself as the energy.
 
-In the banner both runs start from the same noise and reach about the same logP (2.7 and 2.5 for a request of 2.5). With the property adapter alone, the molecule is
-explained by whichever concept it happens to realize (pink). With the concept adapter as well, it is explained by the
-concept that was asked for (purple). The glow is the explainer's own explanation of the finished molecule, and the run is a
-real recording ([how it was made](docs/assets/banner/README.md)).
+The banner shows the idea in two parts. Above, MEGAN explains molecules, and the glow marks the part that drives the
+property. Explanations that look alike gather into a **concept** (A, B, C). Below, the frozen generator turns the same
+noise into a molecule twice, both times asked for logP 2.5. It reaches 2.7 and 2.5, and MEGAN reads each molecule back. With
+the property adapter alone, the explanation lands in whichever concept the molecule happens to realize (B, pink). With the
+concept adapter as well, which takes concept A (orange) as its request, it lands in A. The lower run is a real recording, the
+molecules above are drawn for the banner ([how it was made](docs/assets/banner/README.md)).
 
 This is the code and the model zoo of the paper *Generating Graphs for a Reason: Explanation-Conditioned Adapters for
 Discrete Flow Matching*. The generator side lives in [`defog-adapt`](https://github.com/aimat-lab/defog-adapt); this

@@ -127,7 +127,7 @@ def _offsets(c):
 
 
 def draw_state(fig, pos, X, bonds, atom_types, r=3.3, r_hetero=4.1, glow=0.0, fade=1.0, letters=True,
-               name='molecule', bond_sw=1.15, ink=BLACK, shadow_scale=0.5, glow_atoms=None, glow_color=ORANGE):
+               name='molecule', bond_sw=1.15, ink=BLACK, shadow_scale=0.5, glow_atoms=None, glow_color=ORANGE, glow_r=None):
     """Draw one discrete state.
 
     pos      [(x, y)] per node, in pt
@@ -146,7 +146,7 @@ def draw_state(fig, pos, X, bonds, atom_types, r=3.3, r_hetero=4.1, glow=0.0, fa
     if glow * fade > 0.03:                                      # below this figlib would misread the opacity
         marked = set(range(len(pos))) if glow_atoms is None else {int(a) for a in glow_atoms}
         segs = [((pos[i][0], pos[i][1]), (pos[j][0], pos[j][1])) for i, j, _ in bonds if i in marked and j in marked]
-        fig.glow([pos[a] for a in sorted(marked)], glow_color, r, bonds=segs, strength=glow * fade, name=f'{name} glow')
+        fig.glow([pos[a] for a in sorted(marked)], glow_color, glow_r or r, bonds=segs, strength=glow * fade, name=f'{name} glow')
     for i, j, c in bonds:
         (x0, y0), (x1, y1) = pos[i], pos[j]
         d = math.hypot(x1 - x0, y1 - y0) or 1.0
@@ -161,6 +161,6 @@ def draw_state(fig, pos, X, bonds, atom_types, r=3.3, r_hetero=4.1, glow=0.0, fa
         fig.ellipse(x, y, rr, fill=ELEMENT_FILL[sym], stroke=ink, sw=0.85, opacity=op,
                     effects=[shadow(shadow_scale * rr / 3.6, opacity=30 * fade)], name=f'{name} atom')
         if letters and sym != 'C':
-            size = 5.6 if len(sym) == 1 else 4.9
+            size = (5.6 if len(sym) == 1 else 4.9) * r_hetero / 4.1
             fig.text(x, y + 0.36 * size, sym, size=size, font='rcm', color=tint(ink, 1 - fade) if fade < 0.995 else ink,
                      justify='center')
