@@ -133,10 +133,10 @@
      "path": "data/concept_conditions.npz",
      "kind": "concept_conditions",
      "ship": "core",
-     "bytes": 1417213,
-     "sha256": "af7b158ffa9988a6475aac85eece81ae77664c5baedc8c86a7326b9d4b378565",
+     "bytes": 1417126,
+     "sha256": "922acc1ea5edc6c1e9c0ee57abbf80484d329959ac7d7bc2334880307952d9ee",
      "in_hand": true,
-     "note": "Membership vectors of all pool graphs (99,995 x 19); the reference for membership parity."
+     "note": "Membership vectors of all pool graphs (99,995 x 19); the reference for membership parity. The recorded pool path is the bundle name."
     },
     {
      "id": "C13",
@@ -451,10 +451,10 @@
      "path": "data/concept_table.json",
      "kind": "concept_table",
      "ship": "core",
-     "bytes": 7792,
-     "sha256": "ab7ce588250c76478331aba8fb73e68a92b503f32b279769f6706a2832f0fcee",
+     "bytes": 7634,
+     "sha256": "b43e82f2b1e74f8cd1559ead00413a1fa77859c8f994e67f269b3d96a034440f",
      "in_hand": true,
-     "note": "Concept list and scoring settings."
+     "note": "Concept list and scoring settings. The recorded artifact paths are the bundle names."
     },
     {
      "id": "A10",

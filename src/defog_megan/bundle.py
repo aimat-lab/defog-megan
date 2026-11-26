@@ -60,14 +60,16 @@ def load_space(group: str, **overrides):
     return load_concept_space(paths["model"], paths["clustering"], paths["processing"], **settings)
 
 
-def reference_check(space, group: str, n: int = 64, tolerance: float = 1e-5) -> float:
+def reference_check(space, group: str, n: int = 64, tolerance: float = 1e-5,
+                    reference: t.Optional[str] = None, pool: t.Optional[str] = None) -> float:
     """Recompute the memberships of ``n`` evenly spread rows of the group's reference table, return the largest deviation.
 
     Raises ``AssertionError`` if the concept order differs from the table's or the deviation exceeds ``tolerance``
-    (the bound the cluster jobs of the research gated on before every steered run).
+    (the bound the research gated on before every steered run). ``reference`` and ``pool`` name other files than the
+    zoo's, for an experiment that was pointed at a bundle of its own.
     """
     paths = bundle_paths(group)
-    reference = np.load(paths["reference"], allow_pickle=False)
+    reference = np.load(reference or paths["reference"], allow_pickle=False)
     assert list(space.concept_ids) == [str(c) for c in reference["concept_ids"]], "the concept order differs"
     total = reference["phi"].shape[0]
     rows = sorted({int(i) for i in np.linspace(0, total - 1, num=min(n, total))})
@@ -75,7 +77,7 @@ def reference_check(space, group: str, n: int = 64, tolerance: float = 1e-5) -> 
         computed = space.phi([str(reference["smiles"][i]) for i in rows])
     else:                                                 # colored graphs: rows of the pool
         from defog_megan.colorgraphs import load_pool_npz, pyg_to_vgd
-        graphs, _ = load_pool_npz(paths["pool"])
+        graphs, _ = load_pool_npz(pool or paths["pool"])
         computed = space.phi_from_graphs([pyg_to_vgd(graphs[i]) for i in rows])
     deviation = float(np.abs(computed - reference["phi"][rows]).max())
     assert deviation <= tolerance, f"{group}: the explainer deviates from the reference table by {deviation:.3e}"
