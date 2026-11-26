@@ -1,0 +1,36 @@
+{
+  "metric": "joint match",
+  "meaning": "the share of generated graphs that have the requested property and are a member of the requested concept",
+  "source": "Tables 3 and 4 of the paper (1024 graphs per cell, repeated runs); the scorers scripts/score_color_joint.py and scripts/score_mol_joint.py compute them from the raw samples",
+  "protocol": {
+    "cells": 30,
+    "graphs_per_cell": 1024,
+    "particles": 16,
+    "property_tolerance": {"colored graphs": 1.0, "molecules": 0.5},
+    "concept": "core membership (phi < 0.5) in the requested concept, read by the explainer"
+  },
+  "groups": [
+    {
+      "name": "Synthetic colored graphs",
+      "rows": [
+        {"arm": "base", "label": "unconditional base", "value": 0.043717},
+        {"arm": "property", "label": "+ property adapter", "value": 0.114063},
+        {"arm": "concept", "label": "+ concept adapter", "value": 0.221810},
+        {"arm": "joint", "label": "+ both adapters", "value": 0.276302},
+        {"arm": "fk", "label": "+ Feynman-Kac steering only", "value": 0.405046},
+        {"arm": "joint_fk", "label": "+ both adapters + Feynman-Kac", "value": 0.544206}
+      ]
+    },
+    {
+      "name": "Molecules, Crippen logP",
+      "rows": [
+        {"arm": "base", "label": "unconditional base", "value": 0.002799},
+        {"arm": "property", "label": "+ property adapter", "value": 0.015007},
+        {"arm": "concept", "label": "+ concept adapter", "value": 0.066862},
+        {"arm": "joint", "label": "+ both adapters", "value": 0.194499},
+        {"arm": "fk", "label": "+ Feynman-Kac steering only", "value": 0.064453},
+        {"arm": "joint_fk", "label": "+ both adapters + Feynman-Kac", "value": 0.675521}
+      ]
+    }
+  ]
+}
