@@ -2,7 +2,7 @@
 
 Generate graphs for a requested property and for the structural concept through which a graph reaches it: the
 condition is the concept-membership vector of a self-explaining GNN, the generator a frozen DeFoG model steered by
-adapters and Feynman-Kac particle steering. This is a pre-alpha skeleton; see the README for what exists.
+adapters and Feynman-Kac particle steering. This is the code of the paper; see the README for what it contains.
 """
 from importlib import metadata as _metadata
 

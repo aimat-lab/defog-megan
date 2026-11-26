@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 (unreleased)
+## 1.0.0 (2026-11-26)
 
 The code of the paper *Generating Graphs for a Reason: Explanation-Conditioned Adapters for Discrete Flow Matching*: the four
 experiments of the main text, their scorers, and the model zoo. Built on `defog-adapt` 0.1.0.

@@ -5,9 +5,14 @@ type: software
 authors:
   - family-names: Teufel
     given-names: Jonas
+  - family-names: Binz
+    given-names: Clemens
+  - family-names: Friederich
+    given-names: Pascal
 license: MIT
 repository-code: "https://github.com/aimat-lab/defog-megan"
-version: "1.0.0.dev0"
+version: "1.0.0"
+date-released: "2026-11-26"
 references:
   - type: conference-paper
     title: "DeFoG: Discrete Flow Matching for Graph Generation"

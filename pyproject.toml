@@ -4,14 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "defog-megan"
-# Development version. The first release is 1.0.0; it is set when the release gate passes.
-version = "1.0.0.dev0"
+version = "1.0.0"
 description = "Concept-conditioned graph generation: property and concept adapters for DeFoG, Feynman-Kac steering, evaluation and a model zoo."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE", "NOTICE"]
 authors = [
     { name = "Jonas Teufel", email = "jonseb1998@gmail.com" },
+    { name = "Clemens Binz" },
+    { name = "Pascal Friederich" },
 ]
 requires-python = ">=3.10,<3.13"
 keywords = [
@@ -19,7 +20,7 @@ keywords = [
     "concept explanations", "adapters", "molecular generation", "pytorch",
 ]
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
