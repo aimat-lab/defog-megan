@@ -6,7 +6,11 @@ environment (same torch build, same explainer stack, one thread) with identical 
 can only come from the port. Each run happens in a scratch copy of the experiment, so neither writes into a checkout.
 
     python tests/parity/experiment_parity.py sample_color_joint --old-library <research repo> \\
-        --reference <extracted research package> --args "--__TESTING__ True --STAGE \\"'probe'\\""
+        --reference <extracted research package> --args "--__TESTING__ True --STAGE \\"'probe'\\"" --keep <folder>
+
+``--old-args`` gives the research side arguments of its own (it needs the paths of the models and the paper's weights where its
+defaults were launcher overrides), ``--new-name`` names the experiment here when it was renamed, ``--control old`` or
+``--control new`` runs one side twice to show how deterministic it is on its own.
 
 Compared: every ``gen_*.npz`` array for array (the graph experiments), every ``gen_*.json`` SMILES list (the molecular
 ones), and the manifest apart from timings, the device and the keys only one side has.

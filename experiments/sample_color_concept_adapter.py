@@ -71,6 +71,9 @@ TRAIN_SPLIT: float = 0.9
 #       per-concept rates are read against; the others draw a token baseline of 8 graphs. Each shard seeds with SEED + SHARD.
 SHARD: int = 0
 NUM_SHARDS: int = 1
+# :param STAGE: the name this experiment's only stage has in its manifest; it exists so that the shard collector and the
+#       reproduction scripts treat every sampler alike.
+STAGE: str = "concepts"
 SEED: int = 42
 __DEBUG__: bool = False
 __TESTING__: bool = False
@@ -145,7 +148,7 @@ def experiment(e: Experiment) -> None:
           f"connected={baseline_report['connected_rate']:.3f}")
 
     manifest = {
-        "stage": "concepts", "shard": e.SHARD, "num_shards": e.NUM_SHARDS,
+        "stage": e.STAGE, "shard": e.SHARD, "num_shards": e.NUM_SHARDS,
         "source_adapter": e.ADAPTER_CKPT,
         "target_mode": e.TARGET_MODE,
         "guidance_weight": e.GUIDANCE_WEIGHT,
