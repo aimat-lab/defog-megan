@@ -15,9 +15,10 @@ skips with a reason in another one.
 
 Seven colored-graph cases, in a quick tier and in the paper's tier (500 steps, 16 particles): unconditional sampling,
 explicit-size sampling, each adapter alone, the two-adapter composition (plain sum at weights (1, 1)), Feynman-Kac steering
-with multinomial resampling, and the end-to-end conditioned model. `defog-adapt` 0.1.0 reproduces the quick tier, case by
-case. A composition that averages the adapters instead of summing them fails the two-adapter and the steered cases and not
-the single-adapter ones (checked: the paper's runs summed), and a resampler that draws in another order fails the steered case.
+with multinomial resampling, and the end-to-end conditioned model. `defog-adapt` 0.1.0 reproduces **both tiers**, case by
+case (the paper tier took about three hours on one CPU core, the steered case 2.3 of them). A composition that averages the
+adapters instead of summing them fails the two-adapter and the steered cases and not the single-adapter ones (checked: the
+paper's runs summed), and a resampler that draws in another order fails the steered case.
 
 ## 2. The experiments, side by side with the research code
 
@@ -61,9 +62,12 @@ scorers, with the explainer recomputing every membership vector, and the outputs
   including its 35 charged molecules, read with the strict codec), the memberships agree to 2e-7 and exactly, respectively.
 - The Ames data scripts rebuild the paper's tables from the public dataset **byte for byte** (the molecule table, its metadata,
   the size histogram), and the coverage reports, the label table and the frozen split match.
-- **The ZINC pool is the exception.** The strings of the paper's pool differ from those of the public dataset (stereochemistry
-  and charge notation) for about a third of the molecules, so a pool rebuilt from the dataset is of the same kind and size and not
-  the same table. The rest of the pipeline is unaffected.
+- **The ZINC pool is rebuilt from the public dataset as well.** The paper's pool is not the dataset's strings but what the base
+  makes of them: each molecule of `zinc64k` encoded into the base's vocabulary and decoded (which drops charges and
+  stereochemistry), each decoded molecule kept once. `scripts/prepare_zinc_defog.py` does that, and the table it writes (65,434
+  of the dataset's 65,529 molecules, 95 repeats dropped, with the exact Crippen logP) is identical to the paper's `zinc64k_defog.csv`
+  byte for byte. The memberships of that pool, recomputed by the chain on a CPU, are bitwise equal to the paper's (all 65,434 x 42
+  values, so no molecule changes its core or periphery status), and so is the logP of every molecule.
 
 ## What was found on the way
 

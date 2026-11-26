@@ -75,10 +75,11 @@ runs, 1024 graphs per cell) on the models of the zoo, split over the visible GPU
 
 The colored-graph scripts need only the zoo. The molecular scorers also need tables of the molecules (their memberships, the
 logP or class probability of the pool, the training molecules for the novelty column), which hold SMILES and are therefore not
-in the zoo: `reproduce/prepare_tables.sh ames` and `reproduce/prepare_tables.sh zinc` build them from the public data. For Ames
-this reproduces the paper's tables exactly. For ZINC it does not quite: the paper's pool was built from a table whose source
-strings the public dataset alone does not determine, so a rebuilt pool is of the same kind and size and the numbers agree
-closely, not to the last digit.
+in the zoo: `reproduce/prepare_tables.sh ames` and `reproduce/prepare_tables.sh zinc` build them from the public data, and they
+are the paper's tables. The molecules, their labels and the exact logP come out identical to the paper's files, byte for byte
+(the corpus steps `scripts/prepare_ames_defog.py` and `scripts/prepare_zinc_defog.py` decode the public molecules through the
+base's vocabulary and keep each decoded molecule once). The memberships are recomputed by the explainer and came out bitwise
+equal to the paper's in the checks (CPU runs); another machine's float arithmetic can differ in the last digits.
 
 ```bash
 export DEFOG_MEGAN_ZOO=$HOME/defog-megan-zoo

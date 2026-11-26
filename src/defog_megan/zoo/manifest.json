@@ -305,7 +305,7 @@
      "bytes": 3398008,
      "sha256": "c0ae4fd02e690395e4dfcbc0690165534f0684de045ff781dc6bc83b873fb900",
      "in_hand": true,
-     "note": "Membership vectors of 65,434 molecules; holds SMILES, so it is withheld pending the licence decision."
+     "note": "Membership vectors of 65,434 molecules; holds SMILES, so it is not redistributed. `reproduce/prepare_tables.sh zinc` rebuilds it from the public dataset."
     },
     {
      "id": "L12a",
@@ -315,7 +315,7 @@
      "bytes": 3733500,
      "sha256": "76cdd0188d94dec27c90d900b9e54051c18e5e3108828e30d95343442ed91a12",
      "in_hand": true,
-     "note": "SMILES with Crippen logP of 65,434 molecules; withheld pending the licence decision."
+     "note": "SMILES with Crippen logP of 65,434 molecules; not redistributed. `reproduce/prepare_tables.sh zinc` rebuilds it from the public dataset, byte for byte."
     },
     {
      "id": "L12b",
@@ -325,7 +325,7 @@
      "bytes": 523600,
      "sha256": "28f0f45d6e5aafaac8aa9af884a6d6b468e17bfd9d9f82ed461791869acc8d58",
      "in_hand": true,
-     "note": "logP column of the table above; withheld with it."
+     "note": "logP column of the table above; not redistributed with it."
     },
     {
      "id": "L13",
@@ -342,8 +342,8 @@
      "path": "MODEL_CARD.md",
      "kind": "model_card",
      "ship": "core",
-     "bytes": 3824,
-     "sha256": "b5c13f06352d423b3c5959013e3e35698bb986b54f4a4a6598d0f50b732e21e1",
+     "bytes": 4046,
+     "sha256": "c72bbf44a3d9e7f27b13794d9eba8c6c9f6a45343ada404e8d64bde0e4a66365",
      "in_hand": true,
      "note": "What the group contains, the settings of the paper's runs and the things to know."
     }
@@ -598,7 +598,7 @@
   "zinc-logp": {
    "file": "defog-megan-zoo-zinc-logp-1.0.0.tar",
    "bytes": 183633920,
-   "sha256": "fc8057b13cbafdef173032888e117f6e9bb5c5c4d2329109d7ea8c7eb397e286"
+   "sha256": "71c7d41da776e333fa535e85229ad16fec659c5d00aa01f5d1e908cb2b9005de"
   },
   "ames": {
    "file": "defog-megan-zoo-ames-1.0.0.tar",
