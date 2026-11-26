@@ -4,6 +4,9 @@ A vocabulary without charged classes must behave exactly as in defog-adapt (the 
 decoding); one with them reads strictly (a charge it cannot express rejects the molecule, and decoding repairs nothing).
 """
 import json
+import re
+import warnings
+from pathlib import Path
 
 import pytest
 import torch
@@ -156,3 +159,32 @@ def test_the_ames_base_vocabulary_is_the_charged_one_of_the_library():
 def test_the_zinc_base_vocabulary_is_the_neutral_one_of_the_library():
     schema = _sidecar("zinc-logp", "base.schema.json")
     assert schema["atom_types"] == NEUTRAL_KEK_ATOMS and schema["bond_types"] == KEKULE_BONDS and schema["kekulize"] is True
+
+
+# -- the RDKit release of the paper -------------------------------------------------------------------------------------------
+
+def test_another_rdkit_release_is_flagged_once_and_the_papers_is_not(monkeypatch):
+    import rdkit
+
+    from defog_megan import molecules
+    monkeypatch.setattr(molecules, "_warned", False)
+    monkeypatch.setattr(rdkit, "__version__", "2099.1.1")
+    with pytest.warns(RuntimeWarning, match="2099.1.1"):
+        assert molecules.warn_if_rdkit_differs("the logP") is True
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")                              # a second call must not warn again
+        assert molecules.warn_if_rdkit_differs("the logP") is True
+    monkeypatch.setattr(molecules, "_warned", False)
+    monkeypatch.setattr(rdkit, "__version__", molecules.PAPER_RDKIT)
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        assert molecules.warn_if_rdkit_differs("the logP") is False
+
+
+def test_the_pin_of_the_chem_extra_is_the_release_the_code_expects():
+    from packaging.version import Version
+
+    from defog_megan.molecules import PAPER_RDKIT
+    pyproject = (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text()
+    pinned = re.search(r'"rdkit==([0-9.]+)"', pyproject)
+    assert pinned and Version(pinned.group(1)) == Version(PAPER_RDKIT)

@@ -30,10 +30,33 @@ from defog_adapt.domains import molecule as _adapt
 from defog_adapt.domains.molecule import MoleculeDomain, build_encoders, mol_to_smiles, needs_kekulize
 
 __all__ = [
-    "CHARGED_KEK_V1_ATOMS", "NEUTRAL_KEK_ATOMS", "KEKULE_BONDS", "build_encoders", "needs_kekulize", "mol_to_smiles",
+    "PAPER_RDKIT", "warn_if_rdkit_differs", "CHARGED_KEK_V1_ATOMS", "NEUTRAL_KEK_ATOMS", "KEKULE_BONDS", "build_encoders", "needs_kekulize", "mol_to_smiles",
     "atom_label", "atom_label_parts", "is_charged_vocab", "smiles_to_pyg_data", "pyg_data_to_mol", "ChargedMoleculeDomain",
     "make_domain",
 ]
+
+#: The RDKit release of the paper's runs. The logP rung's property is RDKit's Crippen logP of the decoded molecule, and that
+#: value differs between releases for a small share of molecules (11 of 6,833 sampled molecules between 2026.03.4 and
+#: 2026.09.2, by up to 1.4), which moves the rung's error in the fourth decimal.
+PAPER_RDKIT = "2026.03.4"
+_warned = False
+
+
+def warn_if_rdkit_differs(what: str = "the Crippen logP") -> bool:
+    """Warn, once per process, that ``what`` is computed with another RDKit release than the paper's. Returns whether it differs."""
+    global _warned
+    import rdkit
+
+    if rdkit.__version__ == PAPER_RDKIT:
+        return False
+    if not _warned:
+        _warned = True
+        warnings.warn(f"{what} is computed with RDKit {rdkit.__version__}, the paper's runs used {PAPER_RDKIT}; the value differs "
+                      f"between releases for a small share of molecules, so the numbers of the logP rung agree with the paper's "
+                      f"only to about the third decimal (pip install rdkit=={PAPER_RDKIT} reproduces them exactly)",
+                      RuntimeWarning, stacklevel=2)
+    return True
+
 
 #: the nine elements of the kekulized ZINC base, in its channel order
 NEUTRAL_KEK_ATOMS: t.List[str] = ["C", "N", "O", "F", "P", "S", "Cl", "Br", "I"]

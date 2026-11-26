@@ -3,6 +3,7 @@
  "source": "result folders of the research code (see tests/parity/README.md)",
  "environment": {
   "torch": "2.5.0+cu124",
+  "rdkit": "2026.03.4",
   "python": "3.10.15",
   "threads": 1,
   "device": "cpu"

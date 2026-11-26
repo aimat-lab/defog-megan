@@ -43,6 +43,7 @@ from rdkit import Chem, RDLogger
 from rdkit.Chem import Crippen
 
 from defog_megan.bundle import load_space
+from defog_megan.molecules import warn_if_rdkit_differs
 from defog_megan.zoo import zoo_path
 
 RDLogger.DisableLog("rdApp.*")
@@ -128,6 +129,7 @@ def main():
     ap.add_argument("--logp", default=zoo_path("zinc-logp", "data/logp.npy"), help="the Crippen logP of every pool molecule")
     ap.add_argument("--train-csv", required=True, help="the molecules the adapters trained on (a SMILES column), for the novelty column")
     args = ap.parse_args()
+    warn_if_rdkit_differs("the property of the logP scorer")
     os.makedirs(args.out, exist_ok=True)
 
     units = load_units([os.path.join(args.root, s) for s in args.stages])

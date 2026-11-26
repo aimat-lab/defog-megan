@@ -49,6 +49,8 @@ class MolJointEnergy:
                  batch_size: int = 256):
         if mode not in ("sum", "max"):
             raise ValueError(f"unknown energy mode {mode!r}")
+        from .molecules import warn_if_rdkit_differs
+        warn_if_rdkit_differs("the logP term of the Feynman-Kac energy")
         self.space = space
         self.domain = domain
         self.concept_index = int(concept_index)

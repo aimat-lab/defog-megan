@@ -27,7 +27,7 @@ def golden():
 
 def test_the_file_records_the_environment_it_is_bit_exact_in(golden):
     env = golden["environment"]
-    assert {"python", "torch", "threads", "device"} <= set(env) and env["threads"] == 1 and env["device"] == "cpu"
+    assert {"python", "torch", "rdkit", "threads", "device"} <= set(env) and env["threads"] == 1 and env["device"] == "cpu"
 
 
 def test_every_case_is_in_the_file_and_nothing_else(golden):

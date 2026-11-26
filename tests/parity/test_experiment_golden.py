@@ -6,8 +6,9 @@ experiment: the adapters, the composition, the codec, Feynman-Kac steering with 
 
     DEFOG_MEGAN_ZOO=<zoo> OMP_NUM_THREADS=1 python -m pytest -m parity tests/parity/test_experiment_golden.py
 
-The digests are bit-exact only within one torch build on one CPU architecture; another build skips the tests, and
-``DEFOG_MEGAN_PARITY_ANY_BUILD=1`` runs them anyway (a mismatch is then not necessarily a defect).
+The digests are bit-exact only within one torch build on one CPU architecture (and, for the molecular cases, one RDKit release:
+the exact logP depends on it); another build skips the tests, and ``DEFOG_MEGAN_PARITY_ANY_BUILD=1`` runs them anyway (a
+mismatch is then not necessarily a defect).
 """
 import json
 import os
@@ -44,6 +45,10 @@ def zoo(golden):
     return str(path)
 
 
+def _molecular(name):
+    return name.startswith(("zinc-logp/", "ames/"))
+
+
 def _cases():
     return sorted(json.loads(GOLDEN.read_text())["cases"])
 
@@ -51,6 +56,12 @@ def _cases():
 @pytest.mark.parametrize("name", _cases())
 def test_the_experiment_reproduces_the_research_output(golden, zoo, name):
     case = golden["cases"][name]
+    if _molecular(name) and os.environ.get("DEFOG_MEGAN_PARITY_ANY_BUILD") != "1":
+        import rdkit
+        recorded = golden["environment"]["rdkit"]
+        if rdkit.__version__ != recorded:
+            pytest.skip(f"the molecular digests depend on the RDKit release (Crippen logP): the golden file was made with {recorded}, "
+                        f"this is {rdkit.__version__}")
     scratch = Path(tempfile.mkdtemp(prefix="parity-"))
     try:
         folder = run(REPO / "experiments" / f"{case['experiment']}.py", case["arguments"], scratch, [str(REPO / "src")], zoo)

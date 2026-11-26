@@ -49,6 +49,8 @@ scorers, with the explainer recomputing every membership vector, and the outputs
 | Table 1: base, adapter at w = 1 and 2, Feynman-Kac with 16 and 128 particles, the FiLM-only control | identical (every row, every column) |
 | Table 2: the concept arm on 19 concepts (match, lift, property shift) | identical, summary and per-concept table |
 | Table 3: six arms over 30 cells (1024 graphs each) | identical: the summary, all 180 rows of the cell table, and the motif mechanisms |
+| Table 4: the logP rung (190 dumps of molecules; the property is the exact Crippen logP) | identical (summary, cell table, the Experiment 3 report) with the paper's RDKit release, see below |
+| the Ames rung (52 dumps; model-graded) | identical (summary, cell table, the Experiment 4 report) |
 
 ## 4. The data the experiments need
 
@@ -73,6 +75,11 @@ scorers, with the explainer recomputing every membership vector, and the outputs
 - **A label that was not the setting.** The archived Feynman-Kac runs of Experiment 1 record `resample_scheme: residual`, the
   parameter of the evaluation script. The sampler that ran did not accept the parameter and resampled multinomially, which is what
   the experiments here use and record.
+- **The exact property depends on the RDKit release.** Scoring the paper's raw logP samples with a newer RDKit (2026.09.2 instead
+  of the paper's 2026.03.4) changed the Crippen logP of 11 of 6,833 sampled molecules by up to 1.4 and with it the error and the
+  property match of the rung in the fourth decimal; with 2026.03.4 the scorer's summary, cell table and per-experiment report
+  are identical to the paper's. `chem` therefore pins 2026.03.4, the manifests record the release, and the code warns when another
+  one is installed. The membership vectors and the Ames rung do not depend on it.
 - **Defaults that were overrides.** The research code's file defaults for the molecular runs (eta 25, joint weights (1, 2), 128
   graphs) were not what the paper ran (eta 500, weights (1, 1), 1024 graphs). The experiments here default to the paper's settings.
 

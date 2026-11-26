@@ -22,6 +22,11 @@ experiments of the main text, their scorers, and the model zoo. Built on `defog-
 - `tests/parity/`: the golden outputs of the research code, for the generator side (seven cases, two tiers) and for every
   experiment (eight cases), with the tools that make them.
 
+### Dependencies
+
+`defog-adapt>=0.1.0`; the explainer stack (`graph_attention_student>=1.6.0`, `megan_global_explanations>=0.6.0`, `visual_graph_datasets>=0.17.0`);
+`rdkit==2026.3.4`, the release of the paper's runs (the logP rung's exact property depends on it); PyComex for the experiments.
+
 ### How it was checked
 
 Every ported experiment was run next to the research code in one environment with identical arguments, and the generated

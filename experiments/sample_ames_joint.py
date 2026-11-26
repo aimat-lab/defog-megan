@@ -59,6 +59,7 @@ from defog_megan.molecules import (
 from defog_megan.zoo import zoo_path
 
 RDLogger.DisableLog("rdApp.*")
+RDKIT_VERSION = __import__("rdkit").__version__
 
 # ============================================================================
 BASE_CKPT: str = zoo_path("ames", "base.ckpt")
@@ -358,6 +359,7 @@ def experiment(e: Experiment) -> None:
                      "time_distortion": e.TIME_DISTORTION,
                      "sizes": os.path.basename(e.SIZE_FILE) if e.SIZE_FILE else "base marginal"},
         "device": torch.cuda.get_device_name(0) if torch.cuda.is_available() else "cpu",
+        "versions": {"torch": torch.__version__, "rdkit": RDKIT_VERSION},
         "units": [],
     }
     for unit in mine:

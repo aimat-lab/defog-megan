@@ -6,13 +6,14 @@ reports IDENTICAL, the research side's result folder (kept with ``--keep``) is t
     python tests/parity/make_experiment_golden.py --case colorgraphs/probe=<folder> --case ames/fk=<folder> ...
 
 The digests are bit-exact only within one torch build on one CPU architecture; the file records the torch version, and the gate
-skips on another one.
+skips on another one. The molecular cases also depend on the RDKit release (the exact logP of the logP rung), recorded too.
 """
 import argparse
 import json
 import platform
 from pathlib import Path
 
+import rdkit
 import torch
 
 from cases_experiments import CASES
@@ -41,7 +42,8 @@ def main() -> None:
     OUT.write_text(json.dumps({
         "format": 1,
         "source": "result folders of the research code (see tests/parity/README.md)",
-        "environment": {"torch": torch.__version__, "python": platform.python_version(), "threads": 1, "device": "cpu"},
+        "environment": {"torch": torch.__version__, "rdkit": rdkit.__version__, "python": platform.python_version(), "threads": 1,
+                        "device": "cpu"},
         "cases": dict(sorted(cases.items())),
     }, indent=1) + "\n")
     print(f"wrote {OUT}: {len(cases)} cases, {sum(len(c['files']) for c in cases.values())} files")

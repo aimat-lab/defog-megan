@@ -34,6 +34,11 @@ pip install -e ".[chem,megan,experiments]"
 `experiments` PyComex, which runs the experiments. Python 3.12 additionally needs `pyarrow<26`, which the `megan` extra
 requests.
 
+**RDKit is pinned to the release of the paper's runs (2026.03.4).** The property of the logP rung is RDKit's Crippen logP of the
+decoded molecule, and that value differs between releases for a small share of molecules (11 of 6,833 sampled molecules
+between 2026.03.4 and 2026.09.2, by up to 1.4), which moves the rung's error in the fourth decimal. With the pinned release the
+scorers reproduce the paper's numbers exactly; the code warns once if another release is installed.
+
 ## Get the models
 
 The trained models and the small data files that carry their contracts are in the **model zoo**, three groups of files

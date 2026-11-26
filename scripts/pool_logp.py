@@ -20,6 +20,10 @@ def main() -> None:
     from rdkit import Chem, RDLogger
     from rdkit.Chem import Crippen
 
+    from defog_megan.molecules import warn_if_rdkit_differs
+
+    warn_if_rdkit_differs("the pool's logP")
+
     RDLogger.DisableLog("rdApp.*")
     smiles = [str(s) for s in np.load(args.conditions, allow_pickle=True)["smiles"]]
     logp = np.array([Crippen.MolLogP(Chem.MolFromSmiles(s)) for s in smiles], dtype=np.float64)
