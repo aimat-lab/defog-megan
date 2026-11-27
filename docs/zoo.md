@@ -69,8 +69,8 @@ A checkpoint alone is not a usable model. These are stored nowhere inside it, or
 
 - The molecular **base is not a plain unconditional model**: it went through two rounds of structural-sanity
   reinforcement learning after its pretraining.
-- The training split of the logP adapter is not documented by a training log. Its stored normalisation is being compared
-  with the candidate splits; the model card states the result once it is settled.
+- The training split of the logP adapter is not documented by a training log. Its stored normalisation (mean 2.825, sd 1.158)
+  matches the training split of the recipe it was made with, and the model card says so.
 - The colored-graph **base is the exponential-moving-average snapshot from epoch 80** of a 150-epoch run, selected on
   validity, not a final-epoch model.
 - The Ames group steers towards a **predicted** class of a weak classifier, not towards experimental mutagenicity; its
