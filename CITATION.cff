@@ -22,8 +22,8 @@ authors:
 license: MIT
 repository-code: "https://github.com/aimat-lab/defog-megan"
 url: "https://github.com/aimat-lab/defog-megan"
-version: "1.0.0"
-date-released: "2026-11-26"
+version: "1.0.1"
+date-released: "2026-11-27"
 references:
   - type: conference-paper
     title: "DeFoG: Discrete Flow Matching for Graph Generation"
