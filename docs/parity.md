@@ -84,7 +84,7 @@ Parity says the outputs are the research code's. This says that a user gets them
 - **The gate of section 2 on a second machine.** `pytest -m parity tests/parity/test_experiment_golden.py` passes (8 cases, 14
   minutes on one thread) on a different CPU model (a Ryzen 9 3900X, the digests were made on a 5900X) with Python 3.11 instead of
   3.10, against the public zoo alone, so the digests are not tied to one machine of one architecture family.
-- **Installation** of `[chem,megan,experiments]` from PyPI into new environments worked on Python 3.10 (the development
+- **Installation** (then with the extras `chem`, `megan` and `experiments`, which are now part of the plain install) into new environments worked on Python 3.10 (the development
   environment), 3.11 (CPU and CUDA torch, on a second machine) and 3.12 (with `pyarrow<26`); the unit tests pass in them, and the table
   chain of the molecular groups ran in the second machine's environment.
 

@@ -11,7 +11,7 @@ self-report.
     python examples/quickstart.py --concept ch1_cl12 --level 3 --n 128
 
 The settings are those of the paper's runs (500 steps, eta 0, polydec time distortion, the adapters at weight 1 each),
-except for the number of graphs. It needs the ``megan`` extra (the explainer) and the model zoo (``$DEFOG_MEGAN_ZOO``,
+except for the number of graphs. It needs the model zoo (``$DEFOG_MEGAN_ZOO``,
 default ``~/.cache/defog-megan/zoo``). Use a GPU: the graphs are sampled in chunks (``--chunk``) so that a small card is
 enough (the defaults took 13 minutes on a shared 6 GB RTX 2060, and the paper's runs suggest a couple of minutes on a recent
 card), but on a CPU they take hours (try ``--n 8 --steps 50`` there, which shows the effect at lower quality).

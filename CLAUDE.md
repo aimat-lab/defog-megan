@@ -29,7 +29,7 @@ them line up; do not "clean them up" without a parity run.
 ```bash
 python -m venv .venv && . .venv/bin/activate
 pip install torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu
-pip install -e ".[chem,megan,experiments,dev]"
+pip install -e . pytest pytest-xdist
 OMP_NUM_THREADS=2 pytest -q                                   # unit tests, no network, about a minute
 DEFOG_MEGAN_ZOO=<zoo> OMP_NUM_THREADS=1 pytest -m parity      # the golden outputs (opt-in, long, needs the zoo and torch 2.5.0)
 python -m defog_megan.zoo list | verify <group> | fetch <group> | pack <group> ...

@@ -54,7 +54,7 @@ def load_space(group: str, **overrides):
     """The ``ConceptSpace`` of a group's explainer bundle, with the settings its concept table records.
 
     ``overrides`` replace single settings (for an experiment that deliberately scores differently); nothing else is
-    guessed. Needs the explainer stack (the ``megan`` extra).
+    guessed.
     """
     from defog_megan.torch_compat import load_concept_space
 
