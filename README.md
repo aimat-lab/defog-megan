@@ -124,23 +124,38 @@ run; **every number of the Ames rung is model-graded**, and the Ames models deri
 **The weights are pickles, and the explainer's processing module is Python code**: loading them runs code. The hashes in
 the manifest show that a file is the one of the release; they do not show that it is safe. See [`docs/zoo.md`](docs/zoo.md).
 
-## 🔁 Reproduce the results of the paper
+## 🧪 Experiments
 
-The scripts in [`reproduce/`](reproduce) run the paper's settings (500 steps, multinomial resampling, the seeds of the paper's
-runs, 1024 graphs per cell) on the models of the zoo, split over the visible GPUs, and score the result.
+The paper has four experiments, and each has a script in [`reproduce/`](reproduce). It runs the paper's settings (500 steps,
+multinomial resampling, the seeds of the paper's runs, 1024 graphs per cell) on the models of the zoo and splits the work over
+the visible GPUs. The scorers in [`scripts/`](scripts) turn the samples into the paper's tables.
 
-| result | script | scorer | what it computes |
+| Experiment | Paper | Run | Score |
 |---|---|---|---|
-| Table 1 (Experiment 1) | `reproduce/exp1_colored_property.sh` | `scripts/score_color_arms.py` | the property adapter against the base, the FiLM-only control and Feynman-Kac steering: MAE of the requested property, validity, uniqueness, novelty, KL to the data |
-| Table 2 (Experiment 1) | the same script | `scripts/score_color_concepts.py` | the concept adapter on the 19 concepts: match rate, lift over the base, shift of the property |
-| Table 3 (Experiment 2) | `reproduce/exp2_colored_joint.sh` | `scripts/score_color_joint.py` | six arms over 30 cells: validity, property match, concept match, joint match, distinct hits |
-| Table 4, Figure 2 (Experiment 3) | `reproduce/exp3_zinc_logp.sh` | `scripts/score_mol_joint.py` | the same for molecules, with the exact Crippen logP |
-| Figure 3 and its tables (Experiment 4) | `reproduce/exp4_ames.sh` | `scripts/score_ames_joint.py` | the same for the Ames class, model-graded |
+| **1** Colored graphs, each adapter alone | Tables 1, 2 | [`exp1_colored_property.sh`](reproduce/exp1_colored_property.sh) | [`score_color_arms.py`](scripts/score_color_arms.py)<br>[`score_color_concepts.py`](scripts/score_color_concepts.py) |
+| **2** Colored graphs, property and concept together | Table 3 | [`exp2_colored_joint.sh`](reproduce/exp2_colored_joint.sh) | [`score_color_joint.py`](scripts/score_color_joint.py) |
+| **3** Molecules, Crippen logP | Table 4, Figure 2 | [`exp3_zinc_logp.sh`](reproduce/exp3_zinc_logp.sh) | [`score_mol_joint.py`](scripts/score_mol_joint.py) |
+| **4** Molecules, Ames mutagenicity class | Figure 3 and its tables | [`exp4_ames.sh`](reproduce/exp4_ames.sh) | [`score_ames_joint.py`](scripts/score_ames_joint.py) |
+
+The scorers compute these numbers.
+
+- **Experiment 1.** Table 1 compares the property adapter with the base, the FiLM-only control and Feynman-Kac steering (MAE of
+  the requested property, validity, uniqueness, novelty, KL to the data). Table 2 scores the concept adapter on the 19
+  concepts (match rate, lift over the base, shift of the property).
+- **Experiment 2.** Six arms over 30 cells (validity, property match, concept match, joint match, distinct hits).
+- **Experiment 3.** The same for molecules, with the exact Crippen logP.
+- **Experiment 4.** The same for the Ames class, model-graded.
+
+To run one, point `DEFOG_MEGAN_ZOO` at the zoo and call its script.
 
 ```bash
 export DEFOG_MEGAN_ZOO=$HOME/defog-megan-zoo
-reproduce/exp2_colored_joint.sh                                  # long on one GPU; NUM_SHARDS splits it over several
-EXTRA="--__TESTING__ True" NUM_SHARDS=1 reproduce/exp2_colored_joint.sh     # a tiny run of the whole chain, minutes on a CPU
+
+# Experiment 2 at the paper's settings, long on one GPU (NUM_SHARDS splits it over several)
+reproduce/exp2_colored_joint.sh
+
+# the same chain as a tiny run, minutes on a CPU
+EXTRA="--__TESTING__ True" NUM_SHARDS=1 reproduce/exp2_colored_joint.sh
 ```
 
 The colored-graph scripts need only the zoo. The molecular scorers also need tables of the molecules, which hold SMILES and
