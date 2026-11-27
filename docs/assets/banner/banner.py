@@ -195,7 +195,7 @@ def timeline(f):
     s = SimpleNamespace(run=None, p=0.0, running=False, fade_noise=1.0, fade_result=0.0, caption=0.0, glow=0.0,
                         prop=0.0, conc=0.0,                       # adapters: 0 away, 1 docked
                         explain=1.0,                              # opacity of the upper left part
-                        rho=0.0, expl_out=0.0, clusters=1.0,      # reset: first molecules back, explanations gone, clusters gone
+                        rho_out=0.0, rho_in=0.0, expl_out=0.0, clusters=1.0,   # reset: last inputs out, then the first ones back; explanations, clusters gone
                         rb=0.0, rb_alpha=0.0, rb_letter=None, lit=0.0,    # read back: front, opacity, concept, glow
                         ask=0.0, ask_ring=0.0, ask_label=0.0)     # the concept adapter's request
     if f < E_END:
@@ -235,7 +235,7 @@ def timeline(f):
         s.ask_label = 1 - smooth(k / 5)
         s.clusters = 1 - smooth((k - 2) / 10)
         s.expl_out = smooth(k / 8)
-        s.rho = smooth((k - 6) / 10)
+        s.rho_out, s.rho_in = smooth((k - 2) / 6), smooth((k - 8) / 6)     # one after the other: faded drawings do not blend
         s.explain = 0.5 + 0.5 * smooth((k - 8) / 10)
     if s.running:
         s.fade_noise, s.fade_result = 0.0, 1.0
@@ -551,9 +551,9 @@ def draw_lanes(fig, f, s):
         for w in range(WAVES):
             a_in, a_ex = wave_alphas(w, i, f)
             if w == 0:
-                a_in = max(a_in, s.rho)
+                a_in = max(a_in, s.rho_in)
             if w == WAVES - 1:
-                a_in *= 1 - s.rho
+                a_in *= 1 - s.rho_out
                 a_ex *= 1 - s.expl_out
             smiles, glow_atoms = EXAMPLES[letter][w]
             if a_in * k > 0.02:

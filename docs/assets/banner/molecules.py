@@ -138,11 +138,14 @@ def draw_state(fig, pos, X, bonds, atom_types, r=3.3, r_hetero=4.1, glow=0.0, fa
     glow     0..1: strength of the halo behind the explained atoms
     glow_atoms  the atoms the halo marks (the explanation of a concept); None marks every atom
     glow_color  the colour of the halo (the colour of the concept)
-    fade     0..1: opacity of the whole drawing, for cross-fades
+    fade     0..1: how strong the whole drawing is. A faded drawing is mixed with white, not made transparent, so that a
+             node still hides the bonds behind it (a white ground is assumed). Two drawings faded at the same place
+             therefore do not blend: the one drawn later covers the other, so fade them one after the other
     """
     if fade <= 0.01:
         return
-    op = None if fade >= 0.995 else pct(100 * fade)
+    faded = fade < 0.995
+    ink_f = tint(ink, 1 - fade) if faded else ink
     if glow * fade > 0.03:                                      # below this figlib would misread the opacity
         marked = set(range(len(pos))) if glow_atoms is None else {int(a) for a in glow_atoms}
         segs = [((pos[i][0], pos[i][1]), (pos[j][0], pos[j][1])) for i, j, _ in bonds if i in marked and j in marked]
@@ -153,14 +156,12 @@ def draw_state(fig, pos, X, bonds, atom_types, r=3.3, r_hetero=4.1, glow=0.0, fa
         nx, ny = -(y1 - y0) / d, (x1 - x0) / d
         sw = bond_sw if c == 1 else bond_sw * 0.85
         for o in _offsets(c):
-            fig.line(x0 + nx * o, y0 + ny * o, x1 + nx * o, y1 + ny * o, stroke=ink, sw=sw, opacity=op,
-                     name=f'{name} bond')
+            fig.line(x0 + nx * o, y0 + ny * o, x1 + nx * o, y1 + ny * o, stroke=ink_f, sw=sw, name=f'{name} bond')
     for k, (x, y) in enumerate(pos):
         sym = atom_types[int(X[k])]
         rr = r if sym == 'C' else r_hetero
-        fig.ellipse(x, y, rr, fill=ELEMENT_FILL[sym], stroke=ink, sw=0.85, opacity=op,
+        fig.ellipse(x, y, rr, fill=tint(ELEMENT_FILL[sym], 1 - fade) if faded else ELEMENT_FILL[sym], stroke=ink_f, sw=0.85,
                     effects=[shadow(shadow_scale * rr / 3.6, opacity=30 * fade)], name=f'{name} atom')
         if letters and sym != 'C':
             size = (5.6 if len(sym) == 1 else 4.9) * r_hetero / 4.1
-            fig.text(x, y + 0.36 * size, sym, size=size, font='rcm', color=tint(ink, 1 - fade) if fade < 0.995 else ink,
-                     justify='center')
+            fig.text(x, y + 0.36 * size, sym, size=size, font='rcm', color=ink_f, justify='center')

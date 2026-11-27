@@ -44,7 +44,7 @@ the base's own distribution. The two molecules are `CCSc1ccc(NCC2CCNC2)cc1C#N` (
 
 | file | what it is |
 |---|---|
-| `banner.gif` | the animation, which is the whole banner: 1600 x 723 px, 326 frames at 15 fps, about 3.7 MB |
+| `banner.gif` | the animation, which is the whole banner: 1600 x 723 px, 326 frames at 15 fps, about 3.6 MB |
 | `trajectory.json` | the recorded run: both trajectories, the shared noise, the explanation of each finished molecule and every setting above |
 | `record_trajectories.py` | `record` same-noise pairs from the zoo and rank them, `rank` again, `export` one pair |
 | `candidates.py` | the contact sheet of the ranked candidate pairs, drawn the way the banner draws molecules |
