@@ -37,11 +37,12 @@ THEMES = {
 }
 FONT = "Roboto Condensed"
 
-W = 760                                              # canvas width in "1x" pixels; the file is written at 2x
+W = 900                                              # canvas width in "1x" pixels; the file is written at 2x. The README
+                                                     # shows it at the full width of the page, about 830 to 1000 px
 LEFT = 24
 LABEL_X = 206                                        # the arm labels end here: one column for both groups
-COL_X = (220, 478)                                   # where each group's bars start (its baseline), left to right
-MAX_BAR = 200                                        # the longest bar, in px
+COL_X = (220, 548)                                   # where each group's bars start (its baseline), left to right
+MAX_BAR = 270                                        # the longest bar, in px
 VALUE_GAP, VALUE_W = 10, 34                          # a bar's value label: the gap after the bar and its width
 PITCH, THICK, RADIUS = 33, 18, 4
 HEADER_TO_ROW = 26                                   # the groups' header baseline to the centre of the first row
