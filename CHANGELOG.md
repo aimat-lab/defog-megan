@@ -6,6 +6,9 @@
   scripts that made it), a results chart of the
   paper's two joint experiments (`docs/assets/results.json` and `results.py`), a tested quickstart (`examples/quickstart.py`),
   and the sections reordered after those of `defog-adapt`. The content of the old README is kept.
+- Installation: `pip install -e .` installs everything. The extras `chem`, `megan`, `experiments`, `dev` and `all` are gone and
+  their dependencies are now dependencies of the package; the tests need `pytest` (and `pytest-xdist` for `-n`), installed by hand.
+  The zoo manifest's unused `requires` field, which named the extras, and `Manifest.requires()` are removed.
 
 ## 1.0.0 (2026-11-26)
 

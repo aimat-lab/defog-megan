@@ -4,9 +4,6 @@
  "groups": {
   "colorgraphs": {
    "title": "Synthetic colored graphs",
-   "requires": [
-    "megan"
-   ],
    "files": [
     {
      "id": "C1",
@@ -172,10 +169,6 @@
   },
   "zinc-logp": {
    "title": "Molecules, Crippen logP",
-   "requires": [
-    "chem",
-    "megan"
-   ],
    "files": [
     {
      "id": "L1",
@@ -351,10 +344,6 @@
   },
   "ames": {
    "title": "Ames mutagenicity",
-   "requires": [
-    "chem",
-    "megan"
-   ],
    "files": [
     {
      "id": "A1",

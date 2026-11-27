@@ -31,37 +31,31 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Chemistry",
 ]
 
-# The generator side (models, adapters, composition, Feynman-Kac steering, inpainting) is defog-adapt, released on PyPI.
+# Everything the package needs is installed with it: there are no optional dependencies. The generator side (models,
+# adapters, composition, Feynman-Kac steering, inpainting) is defog-adapt, released on PyPI.
 dependencies = [
-    "defog-adapt>=0.1.0",
+    # Molecules: RDKit through defog-adapt's own extra, pinned to the release of the paper's runs. The logP rung's property is
+    # RDKit's Crippen logP of the decoded molecule, and that value differs between RDKit releases for a small share of molecules
+    # (11 of 6,833 sampled molecules differ between 2026.03.4 and 2026.09.2, by up to 1.4), which moves the rung's error in the
+    # fourth decimal. The code warns when another release is installed.
+    "defog-adapt[chem]>=0.1.0",
+    "rdkit==2026.3.4",
     "numpy>=1.23",
     "networkx>=2.8",
     "pandas>=1.4",
-]
-
-[project.optional-dependencies]
-# Molecules: RDKit through defog-adapt's own extra, pinned to the release of the paper's runs. The logP rung's property is
-# RDKit's Crippen logP of the decoded molecule, and that value differs between RDKit releases for a small share of molecules
-# (11 of 6,833 sampled molecules differ between 2026.03.4 and 2026.09.2, by up to 1.4), which moves the rung's error in the
-# fourth decimal. Override the pin only if that does not matter to you; the code warns when another release is installed.
-chem = ["defog-adapt[chem]>=0.1.0", "rdkit==2026.3.4"]
-# The explainer side: the self-explaining GNN, the concept extraction and the dataset/processing format. Needed for
-# Feynman-Kac steering (the GNN is the energy), for grading and for building membership tables of new data; not for
-# training adapters or for sampling without steering.
-#  * graph_attention_student releases before 1.6.0 load the shipped checkpoints without error and return wrong
-#    memberships, so 1.6.0 is a hard floor.
-#  * That release pins numpy<2, and from pyarrow 26 on pyarrow requires numpy>=2, so without the cap the stack does not
-#    import on Python 3.12 (tested: Python 3.10 to 3.12 work with it).
-megan = [
+    # The explainer side: the self-explaining GNN, the concept extraction and the dataset/processing format. Feynman-Kac
+    # steering (the GNN is the energy), grading and the membership tables of new data need it.
+    #  * graph_attention_student releases before 1.6.0 load the shipped checkpoints without error and return wrong
+    #    memberships, so 1.6.0 is a hard floor.
+    #  * That release pins numpy<2, and from pyarrow 26 on pyarrow requires numpy>=2, so without the cap the stack does not
+    #    import on Python 3.12 (tested: Python 3.10 to 3.12 work with it).
     "graph_attention_student>=1.6.0",
     "megan_global_explanations>=0.6.0",
     "visual_graph_datasets>=0.17.0",
     "pyarrow<26",
+    # The runnable experiments (they are PyComex experiments).
+    "pycomex>=0.27.0",
 ]
-# The runnable experiments (they are PyComex experiments).
-experiments = ["pycomex>=0.27.0"]
-dev = ["pytest>=7", "pytest-xdist", "build"]
-all = ["defog-megan[chem,megan,experiments,dev]"]
 
 [project.urls]
 Homepage = "https://github.com/aimat-lab/defog-megan"

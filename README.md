@@ -30,29 +30,13 @@ and **not** a general-purpose library ([scope of this release](#-scope-of-this-r
 
 ## 📦 Installation
 
-Python 3.10 to 3.12. The explainer stack pins `torch<2.5.1` and `numpy<2`; the paper's runs used torch 2.5.0.
-
 ```bash
-git clone https://github.com/aimat-lab/defog-megan && cd defog-megan
-python -m venv .venv && source .venv/bin/activate
-pip install torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu      # or the CUDA build of 2.5.0
-pip install -e ".[chem,megan,experiments]"
+git clone https://github.com/aimat-lab/defog-megan
+cd defog-megan
+pip install -e .
 ```
 
-`chem` adds RDKit (the molecular experiments), `megan` the explainer stack (steering, grading and membership tables), and
-`experiments` PyComex, which runs the experiments.
-
-<details>
-<summary>Python 3.12, and why RDKit is pinned</summary>
-
-Python 3.12 additionally needs `pyarrow<26`, which the `megan` extra requests.
-
-**RDKit is pinned to the release of the paper's runs (2026.03.4).** The property of the logP rung is RDKit's Crippen logP of the
-decoded molecule, and that value differs between releases for a small share of molecules (11 of 6,833 sampled molecules
-between 2026.03.4 and 2026.09.2, by up to 1.4), which moves the rung's error in the fourth decimal. With the pinned release the
-scorers reproduce the paper's numbers exactly; the code warns once if another release is installed.
-
-</details>
+That installs everything and works on Python 3.10 to 3.12. Use a fresh environment, since the explainer stack pins `torch<2.5.1` and `numpy<2`. RDKit is pinned to the release of the paper's runs, so that the scorers reproduce its numbers. Without a GPU, run `pip install torch==2.5.0 --index-url https://download.pytorch.org/whl/cpu` first to skip the large CUDA download.
 
 ## 📊 Results at a glance
 
@@ -192,7 +176,7 @@ range; the arms of Table 1 give a property MAE of 0.148 for the adapter at weigh
 | `scripts/` | the scorers, the data preparation of the Ames and ZINC sets, `collect_shards.py`, the zoo tools |
 | `reproduce/` | the scripts that run the paper's settings end to end |
 | `src/defog_megan/` | `concepts` (the membership contract and the explainer runtime), `bundle` (an explainer bundle and its reference check), `colorgraphs` and `rb_motifs` (the synthetic domain and its exact property), `molecules` (the molecule codec, with a strict charge-aware reading for the Ames base), the Feynman-Kac energies, `evaluate`, `sizes`, and `zoo` |
-| `tests/` | the unit tests, run with `pytest` (CPU, a minute; the ones that need the zoo skip without it) |
+| `tests/` | the unit tests (`pip install pytest`, then `pytest`; CPU, a minute, and the ones that need the zoo skip without it) |
 | `docs/` | the model zoo, the architecture, and the assets of this page |
 
 ## 📚 Documentation

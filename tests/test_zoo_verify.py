@@ -20,7 +20,7 @@ def build(tmp_path, files):
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(content)
         entries.append(entry(f"F{i}", path, content))
-    return Manifest({"schema_version": 1, "groups": {"g": {"title": "G", "requires": [], "files": entries}}})
+    return Manifest({"schema_version": 1, "groups": {"g": {"title": "G", "files": entries}}})
 
 
 def test_a_correct_copy_passes(tmp_path):
@@ -113,10 +113,9 @@ def test_the_same_path_in_two_groups_is_fine():
 
 def test_a_manifest_can_be_loaded_from_a_file(tmp_path):
     path = tmp_path / "m.json"
-    path.write_text(json.dumps({"schema_version": 1, "groups": {"g": {"title": "T", "requires": ["chem"],
-                                                                         "files": [entry("A", "a.bin", b"alpha")]}}}))
+    path.write_text(json.dumps({"schema_version": 1, "groups": {"g": {"title": "T", "files": [entry("A", "a.bin", b"alpha")]}}}))
     manifest = Manifest.load(path)
-    assert manifest.groups == {"g": "T"} and manifest.requires("g") == ["chem"]
+    assert manifest.groups == {"g": "T"}
     assert manifest.get("g", "A").path == "a.bin"
     with pytest.raises(KeyError):
         manifest.get("g", "Z")

@@ -89,7 +89,6 @@ class Manifest:
         if data.get("schema_version") != SCHEMA_VERSION:
             raise ManifestError(f"unsupported schema_version {data.get('schema_version')!r}, expected {SCHEMA_VERSION}")
         self._titles: Dict[str, str] = {}
-        self._requires: Dict[str, List[str]] = {}
         self._files: List[ZooFile] = []
         #: group -> {"file", "bytes", "sha256"} of the archive that holds the group's core and optional files (see archive.py)
         self.archives: Dict[str, dict] = {}
@@ -103,7 +102,6 @@ class Manifest:
         seen_ids, seen_paths = set(), set()
         for group, body in data.get("groups", {}).items():
             self._titles[group] = body.get("title", group)
-            self._requires[group] = list(body.get("requires", []))
             for entry in body.get("files", []):
                 where = f"{group}/{entry.get('id', '?')}"
                 if entry.get("ship") not in SHIP_LEVELS:
@@ -137,10 +135,6 @@ class Manifest:
     def groups(self) -> Dict[str, str]:
         """Group name -> title."""
         return dict(self._titles)
-
-    def requires(self, group: str) -> List[str]:
-        """The extras a group needs beyond the default install."""
-        return list(self._requires[group])
 
     def files(self, group: Optional[str] = None, ship: Optional[Iterable[str]] = None) -> List[ZooFile]:
         """The files of a group (or all), optionally only those with one of the given ship levels."""
