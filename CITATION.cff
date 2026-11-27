@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use defog-megan, please cite it (the paper reference is added here when it is public), and cite the DeFoG paper it builds on."
-title: "defog-megan: code and models of Generating Graphs for a Reason"
+title: "defog-megan: Generating Graphs for a Reason – Explanation-Conditioned Adapters for Discrete Flow Matching"
 type: software
 abstract: "Code and trained models for concept-conditioned graph generation. A frozen DeFoG discrete flow-matching generator is steered by a property adapter and a concept adapter, with the concept condition taken from the membership vector of a self-explaining GNN (MEGAN). The package also has Feynman-Kac steering, the scorers and the experiments of the paper, and a model zoo."
 keywords:
@@ -15,6 +15,8 @@ keywords:
 authors:
   - family-names: Teufel
     given-names: Jonas
+    affiliation: "Karlsruhe Institute of Technology (KIT)"
+    orcid: "https://orcid.org/0000-0002-9228-9395"
   - family-names: Binz
     given-names: Clemens
   - family-names: Friederich
