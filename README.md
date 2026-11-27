@@ -73,8 +73,7 @@ between two independent runs of the experiment, while the means moved by at most
 explainer, the same model that defines the concept, so a joint match shows that the generator satisfies the explainer and
 not that a substructure is chemically meaningful. Steered arms repeat graphs, so their rates over distinct graphs are lower
 (uniqueness 0.82 on the colored graphs and 0.37 on the molecules). Experiment 4 of the paper, on mutagenicity, is graded by a
-model and is not in the chart. [`docs/parity.md`](docs/parity.md) says how the scorers were checked against the paper's raw
-samples, and the data behind the chart is [`docs/assets/results.json`](docs/assets/results.json).
+model and is not in the chart. The data behind the chart is [`docs/assets/results.json`](docs/assets/results.json).
 
 ## 🚀 Quickstart
 
@@ -193,26 +192,13 @@ range; the arms of Table 1 give a property MAE of 0.148 for the adapter at weigh
 | `scripts/` | the scorers, the data preparation of the Ames and ZINC sets, `collect_shards.py`, the zoo tools |
 | `reproduce/` | the scripts that run the paper's settings end to end |
 | `src/defog_megan/` | `concepts` (the membership contract and the explainer runtime), `bundle` (an explainer bundle and its reference check), `colorgraphs` and `rb_motifs` (the synthetic domain and its exact property), `molecules` (the molecule codec, with a strict charge-aware reading for the Ames base), the Feynman-Kac energies, `evaluate`, `sizes`, and `zoo` |
-| `tests/` | unit tests (CPU, a minute) and `tests/parity/`, the golden outputs of the research code |
-| `docs/` | the model zoo, the architecture, how the port was proven equal to the research code, and the assets of this page |
-
-### Tests and parity
-
-```bash
-pytest                                     # unit tests; the zoo-dependent ones skip without the zoo
-DEFOG_MEGAN_ZOO=$HOME/defog-megan-zoo pytest -m parity      # the golden outputs of the research code (opt-in, long)
-```
-
-The code was ported from research code that produced the paper's numbers, and a port was accepted when it reproduced
-that code's outputs **bit for bit** (CPU, one thread, same torch build), not when it looked right: the generator side
-with golden digests, every experiment with identical SMILES lists and graph arrays, and the scorers with the paper's own
-raw samples. [`docs/parity.md`](docs/parity.md) says what was compared and what was found on the way.
+| `tests/` | the unit tests, run with `pytest` (CPU, a minute; the ones that need the zoo skip without it) |
+| `docs/` | the model zoo, the architecture, and the assets of this page |
 
 ## 📚 Documentation
 
 * [`docs/architecture.md`](docs/architecture.md): how the pieces fit together.
 * [`docs/zoo.md`](docs/zoo.md): the model zoo, its manifest, the ship levels and the licence notes.
-* [`docs/parity.md`](docs/parity.md): how the port was proven equal to the research code, and what was run end to end.
 * [`CHANGELOG.md`](CHANGELOG.md): what is in each release.
 * [`docs/assets/banner/README.md`](docs/assets/banner/README.md): how the banner was recorded and drawn.
 
