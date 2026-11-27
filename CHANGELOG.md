@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.2 (2026-11-27)
+
+This release only changes the citation metadata, for the archive on Zenodo. The code, the experiments, the scorers and the model zoo
+are those of 1.0.1.
+
+- `CITATION.cff`: the title is now "defog-megan: Generating Graphs for a Reason – Explanation-Conditioned Adapters for Discrete Flow
+  Matching", and the first author's affiliation and ORCID are given.
+
 ## 1.0.1 (2026-11-27)
 
 This release changes how the package installs and how it is presented. The experiments, the scorers and the model zoo are those

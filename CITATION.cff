@@ -24,7 +24,7 @@ authors:
 license: MIT
 repository-code: "https://github.com/aimat-lab/defog-megan"
 url: "https://github.com/aimat-lab/defog-megan"
-version: "1.0.1"
+version: "1.0.2"
 date-released: "2026-11-27"
 references:
   - type: conference-paper

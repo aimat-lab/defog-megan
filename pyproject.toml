@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "defog-megan"
-version = "1.0.1"
+version = "1.0.2"
 description = "Concept-conditioned graph generation: property and concept adapters for DeFoG, Feynman-Kac steering, evaluation and a model zoo."
 readme = "README.md"
 license = "MIT"
