@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- `CITATION.cff`: the DOI of the code record on Zenodo (`doi`, all versions) and the DOI of the record that holds the model zoo
+  archives (`identifiers`).
+- README: a DOI badge for the code record and a pointer to the Zenodo record of the model zoo; `docs/zoo.md` says that the same
+  archives are kept there.
+
 ## 1.0.2 (2026-11-27)
 
 This release only changes the citation metadata, for the archive on Zenodo. The code, the experiments, the scorers and the model zoo

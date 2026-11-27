@@ -24,6 +24,11 @@ authors:
 license: MIT
 repository-code: "https://github.com/aimat-lab/defog-megan"
 url: "https://github.com/aimat-lab/defog-megan"
+doi: "10.5281/zenodo.24583646"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.24583881"
+    description: "Zenodo record of the trained models (the model zoo archives), all versions"
 version: "1.0.2"
 date-released: "2026-11-27"
 references:
