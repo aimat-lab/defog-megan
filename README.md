@@ -19,8 +19,8 @@ The banner shows the idea in two parts. Above, MEGAN explains molecules, and the
 property. Explanations that look alike gather into a **concept** (A, B, C). Below, the frozen generator turns the same
 noise into a molecule twice, both times asked for logP 2.5. It reaches 2.7 and 2.5, and MEGAN reads each molecule back. With
 the property adapter alone, the explanation lands in whichever concept the molecule happens to realize (B, pink). With the
-concept adapter as well, which takes concept A (orange) as its request, it lands in A. The lower run is a real recording, the
-molecules above are drawn for the banner ([how it was made](docs/assets/banner/README.md)).
+concept adapter as well, which takes concept A (orange) as its request, it lands in A. The lower run is a real recording. The
+molecules above are drawn for the banner.
 
 This is the code and the model zoo of the paper *Generating Graphs for a Reason: Explanation-Conditioned Adapters for
 Discrete Flow Matching*. The generator side lives in [`defog-adapt`](https://github.com/aimat-lab/defog-adapt); this
@@ -200,7 +200,6 @@ range; the arms of Table 1 give a property MAE of 0.148 for the adapter at weigh
 * [`docs/architecture.md`](docs/architecture.md): how the pieces fit together.
 * [`docs/zoo.md`](docs/zoo.md): the model zoo, its manifest, the ship levels and the licence notes.
 * [`CHANGELOG.md`](CHANGELOG.md): what is in each release.
-* [`docs/assets/banner/README.md`](docs/assets/banner/README.md): how the banner was recorded and drawn.
 
 ## 🧭 Scope of this release
 
