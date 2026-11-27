@@ -8,10 +8,10 @@ protocol and where they come from; this script only draws them, so the chart can
 they do and do not support is stated in the README next to the chart.
 
 Form (after the chart of defog-adapt): one arm is the point, both adapters with Feynman-Kac steering, the end of the
-progression, so it is drawn in the accent and the rest in the de-emphasis gray. The two experiments are two groups
-of six bars above and below a hairline, all on one scale, and every bar is labelled with its value, so there is no
-legend and no axis. The protocol is in the footer, so the figure does not claim more than it shows when it is seen on
-its own.
+progression, so it is drawn in the accent and the rest in the de-emphasis gray. The two experiments are two groups of
+six bars side by side, which share one column of arm labels and one scale, with a hairline between them, and every bar is
+labelled with its value, so there is no legend and no axis. The protocol is in the footer, so the figure does not claim
+more than it shows when it is seen on its own.
 
 Colours and ink are the dataviz reference palette on its light surface and, for readers on a dark page, its dark
 surface (``results_dark.png``, chosen by the README's <picture> element).
@@ -39,21 +39,21 @@ FONT = "Roboto Condensed"
 
 W = 760                                              # canvas width in "1x" pixels; the file is written at 2x
 LEFT = 24
-LABEL_X, BAR_X0, MAX_BAR = 262, 276, 330             # labels end at LABEL_X; bars start at BAR_X0; the longest is MAX_BAR px
+LABEL_X = 206                                        # the arm labels end here: one column for both groups
+COL_X = (220, 478)                                   # where each group's bars start (its baseline), left to right
+MAX_BAR = 200                                        # the longest bar, in px
+VALUE_GAP, VALUE_W = 10, 34                          # a bar's value label: the gap after the bar and its width
 PITCH, THICK, RADIUS = 33, 18, 4
-HEADER_TO_ROW = 26                                   # a group header's baseline to the centre of its first row
+HEADER_TO_ROW = 26                                   # the groups' header baseline to the centre of the first row
 
 
 def layout(n_rows):
-    """Vertical positions in "1x" pixels: the two group-header baselines, every row's centre, the hairline between
-    the groups, the footer's baseline and the canvas height."""
-    first_header = 96
-    centres = [first_header + HEADER_TO_ROW + PITCH * i for i in range(n_rows)]
-    hairline = centres[-1] + THICK / 2 + 16
-    second_header = hairline + 24
-    centres += [second_header + HEADER_TO_ROW + PITCH * i for i in range(n_rows)]
+    """Vertical positions in "1x" pixels: the groups' header baseline, every row's centre (the rows are shared by
+    the groups), the footer's baseline and the canvas height."""
+    header = 88
+    centres = [header + HEADER_TO_ROW + PITCH * i for i in range(n_rows)]
     footer = centres[-1] + THICK / 2 + 34
-    return (first_header, second_header), centres, hairline, footer, int(footer + 38)
+    return header, centres, footer, int(footer + 38)
 
 
 def rounded_bar(ax, x0, y_mid, length, color):
@@ -72,13 +72,14 @@ def main(data_path: Path, out: Path, theme: str = "light") -> None:
     c = THEMES[theme]
     data = json.loads(data_path.read_text(encoding="utf-8"))
     groups = data["groups"]
-    n_rows = len(groups[0]["rows"])
-    if any(len(g["rows"]) != n_rows for g in groups):
-        raise SystemExit("every group needs the same arms")
+    arms = [row["arm"] for row in groups[0]["rows"]]
+    n_rows = len(arms)
+    if len(groups) != len(COL_X) or any([row["arm"] for row in g["rows"]] != arms for g in groups):
+        raise SystemExit(f"the chart draws {len(COL_X)} groups with the same arms in the same order")
     proto = data["protocol"]
     top = max(row["value"] for g in groups for row in g["rows"])
     scale = MAX_BAR / top
-    headers, centres, hairline, footer, H = layout(n_rows)
+    header, centres, footer, H = layout(n_rows)
 
     plt.rcParams["font.family"] = FONT
     fig = plt.figure(figsize=(W / 100, H / 100), dpi=200, facecolor=c["surface"])
@@ -92,24 +93,26 @@ def main(data_path: Path, out: Path, theme: str = "light") -> None:
             fontweight="medium", color=c["ink"], va="baseline")
     ax.text(LEFT, 56, "Joint match: the share of generated graphs that reach the requested property and are a member of "
                       "the requested concept.", fontsize=12.5 * px, color=c["ink2"], va="baseline")
-    for header, group in zip(headers, groups):
-        ax.text(LEFT, header, group["name"], fontsize=12 * px, fontweight="medium", color=c["ink2"], va="baseline")
-    ax.plot([LEFT, W - LEFT], [hairline, hairline], color=c["hairline"], lw=0.8, solid_capstyle="butt")
+    for row, y in zip(groups[0]["rows"], centres):                  # the arm labels, once, for both groups
+        headline = row["arm"] == HEADLINE
+        ax.text(LABEL_X, y + 4.6, row["label"], fontsize=13.5 * px, ha="right", va="baseline",
+                color=c["ink"] if headline else c["ink2"], fontweight="medium" if headline else "regular")
 
-    for k in range(len(groups)):                     # the one baseline each group's bars grow from
-        group = centres[k * n_rows:(k + 1) * n_rows]
-        ax.plot([BAR_X0, BAR_X0], [group[0] - THICK / 2 - 6, group[-1] + THICK / 2 + 6], color=c["baseline"], lw=0.8,
-                solid_capstyle="butt")
-
-    for k, group in enumerate(groups):
-        for row, y in zip(group["rows"], centres[k * n_rows:(k + 1) * n_rows]):
+    for x0, group in zip(COL_X, groups):
+        ax.text(x0, header, group["name"], fontsize=12 * px, fontweight="medium", color=c["ink2"], va="baseline")
+        ax.plot([x0, x0], [centres[0] - THICK / 2 - 6, centres[-1] + THICK / 2 + 6], color=c["baseline"], lw=0.8,
+                solid_capstyle="butt")                                # the one baseline this group's bars grow from
+        for row, y in zip(group["rows"], centres):
             headline = row["arm"] == HEADLINE
             length = row["value"] * scale
-            rounded_bar(ax, BAR_X0, y, length, c["accent"] if headline else c["context"])
-            ax.text(LABEL_X, y + 4.6, row["label"], fontsize=13.5 * px, ha="right", va="baseline",
-                    color=c["ink"] if headline else c["ink2"], fontweight="medium" if headline else "regular")
-            ax.text(BAR_X0 + length + 10, y + 4.8, f"{row['value']:.3f}", fontsize=13.5 * px, ha="left", va="baseline",
-                    color=c["ink"], fontweight="medium" if headline else "regular")
+            rounded_bar(ax, x0, y, length, c["accent"] if headline else c["context"])
+            ax.text(x0 + length + VALUE_GAP, y + 4.8, f"{row['value']:.3f}", fontsize=13.5 * px, ha="left",
+                    va="baseline", color=c["ink"], fontweight="medium" if headline else "regular")
+
+    widest = COL_X[0] + max(row["value"] for row in groups[0]["rows"]) * scale + VALUE_GAP + VALUE_W
+    divider = (widest + COL_X[1]) / 2                                 # a hairline between the two groups
+    ax.plot([divider, divider], [header - 14, centres[-1] + THICK / 2 + 6], color=c["hairline"], lw=0.8,
+            solid_capstyle="butt")
 
     tol = proto["property_tolerance"]
     ax.text(LEFT, footer - 8, f"Means over {proto['cells']} target cells of {proto['graphs_per_cell']} graphs each. Joint match needs the property "
