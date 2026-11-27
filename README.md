@@ -59,7 +59,7 @@ scorers reproduce the paper's numbers exactly; the code warns once if another re
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/assets/results_dark.png">
-    <img src="docs/assets/results.png" alt="Bar chart of the joint match rate of six approaches on two experiments, higher is better. On synthetic colored graphs it rises from 0.044 for the unconditional base to 0.544 for both adapters with Feynman-Kac steering. On molecules it rises from 0.003 to 0.676." width="760">
+    <img src="docs/assets/results.png" alt="Bar chart of the joint match rate of six approaches on two experiments, higher is better. On synthetic colored graphs it rises from 0.044 for the unconditional base to 0.544 for both adapters with Feynman-Kac steering. On molecules it rises from 0.003 to 0.676." width="100%">
   </picture>
 </p>
 
