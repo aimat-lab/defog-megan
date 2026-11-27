@@ -92,7 +92,8 @@ molecule and label tables come out identical to the paper's files, and the membe
 ## Hosting
 
 The archives are assets of the GitHub release of the tag (`download.base_url` of the manifest); `fetch --base-url` takes any
-other place, a `file://` folder included. A citable archive with a DOI is planned and will become the default location.
+other place, a `file://` folder included. The same archives are kept in a citable Zenodo record ([10.5281/zenodo.24583881](https://doi.org/10.5281/zenodo.24583881), all versions), which is
+planned to become the default location.
 
 For maintainers: `python -m defog_megan.zoo pack <group> --src <zoo> --out <dir> --version <v> --update-manifest` builds the
 archive of one group (reproducibly: fixed times and owners) after verifying the source against the manifest and records its

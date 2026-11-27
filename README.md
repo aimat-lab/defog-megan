@@ -7,6 +7,7 @@
   <img alt="Python 3.10 to 3.12" src="https://img.shields.io/badge/python-3.10%E2%80%933.12-3776ab">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-4c9a2a"></a>
   <a href="https://github.com/aimat-lab/defog-megan/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/aimat-lab/defog-megan?color=ff8f1f"></a>
+  <a href="https://doi.org/10.5281/zenodo.24583646"><img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.24583646.svg"></a>
 </p>
 
 Ask a graph generator for a property, **and for the reason**. A frozen [DeFoG](https://arxiv.org/abs/2410.04263) discrete
@@ -90,7 +91,7 @@ from the motif counts of each graph and the concept from the explainer. Other re
 
 The trained models and the small data files that carry their contracts are in the **model zoo**, three groups of files
 (`colorgraphs`, `zinc-logp`, `ames`; about 560 MB of core files in all), described by a manifest with the size and sha256 of
-every file.
+every file. The archives are also kept in a citable [Zenodo record](https://doi.org/10.5281/zenodo.24583881).
 
 ```bash
 export DEFOG_MEGAN_ZOO=$HOME/defog-megan-zoo                  # the default is ~/.cache/defog-megan/zoo
