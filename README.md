@@ -6,7 +6,7 @@
   <a href="https://github.com/aimat-lab/defog-megan/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/aimat-lab/defog-megan/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <img alt="Python 3.10 to 3.12" src="https://img.shields.io/badge/python-3.10%E2%80%933.12-3776ab">
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/license-MIT-4c9a2a"></a>
-  <a href="https://github.com/aimat-lab/defog-megan/releases/tag/v1.0.0"><img alt="Release v1.0.0" src="https://img.shields.io/badge/release-v1.0.0-ff8f1f"></a>
+  <a href="https://github.com/aimat-lab/defog-megan/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/aimat-lab/defog-megan?color=ff8f1f"></a>
 </p>
 
 Ask a graph generator for a property, **and for the reason**. A frozen [DeFoG](https://arxiv.org/abs/2410.04263) discrete

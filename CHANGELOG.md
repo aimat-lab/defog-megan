@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 1.0.1 (2026-11-27)
+
+This release changes how the package installs and how it is presented. The experiments, the scorers and the model zoo are those
+of 1.0.0, and the zoo archives stay on the 1.0.0 release, where `python -m defog_megan.zoo fetch` finds them.
 
 - README: a banner animation of what a concept is above a recording of the sampler (`docs/assets/banner/banner.gif`), a results
   chart of the paper's two joint experiments (`docs/assets/results.json` and `results.py`), a tested quickstart
@@ -8,6 +11,7 @@
 - Installation: `pip install -e .` installs everything. The extras `chem`, `megan`, `experiments`, `dev` and `all` are gone and
   their dependencies are now dependencies of the package; the tests need `pytest` (and `pytest-xdist` for `-n`), installed by hand.
   The zoo manifest's unused `requires` field, which named the extras, and `Manifest.requires()` are removed.
+- `CITATION.cff`: an abstract, keywords and the repository URL.
 
 ## 1.0.0 (2026-11-26)
 
